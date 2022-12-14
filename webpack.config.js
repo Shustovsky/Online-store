@@ -2,6 +2,7 @@ const path = require('path');
 const {merge} = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const baseConfig = {
     entry: './src/index.ts',
@@ -17,7 +18,11 @@ const baseConfig = {
             },
             {
                 test: /\.(scss|css)$/,
-                use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'postcss-loader',
+                    'sass-loader'],
             }
         ]
     },
@@ -39,6 +44,9 @@ const baseConfig = {
                     delete: ['public'],
                 },
             },
+        }),
+        new MiniCssExtractPlugin({
+            filename: '[name].css',
         })
     ],
 }
