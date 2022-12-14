@@ -43,13 +43,21 @@ const baseConfig = {
                 onStart: {
                     delete: ['public'],
                 },
+                onEnd: {
+                    copy: [
+                        {
+                            source: path.join('src', 'assets'),
+                            destination: 'public/assets',
+                        },
+                    ],
+                },
             },
         }),
         new MiniCssExtractPlugin({
             filename: '[name].css',
         })
     ],
-}
+};
 
 module.exports = ({mode}) => {
     const isProductionMode = mode === 'prod';
