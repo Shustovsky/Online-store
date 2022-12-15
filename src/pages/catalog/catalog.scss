@@ -1,0 +1,39 @@
+.main_container {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    padding-top: 1%;
+
+    .filters {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        border: 1px solid black;
+        border-radius: 10px;
+        padding: 3%;
+
+        &__buttons {
+            display: flex;
+            justify-content: space-around;
+
+            &_btn {
+                width: 140px;
+                height: 30px;
+                border-radius: 25px;
+                border: none;
+                background-color: aliceblue;
+                cursor: pointer;
+                transition: 0.5s all;
+
+                &:hover {
+                    background: lightcoral;
+                }
+
+                &:active {
+                    background: lightgreen;
+                }
+            }
+
+        }
+
+    }
+}
