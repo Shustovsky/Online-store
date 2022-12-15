@@ -56,7 +56,7 @@ const baseConfig = {
         new MiniCssExtractPlugin({
             filename: '[name].css',
         })
-    ],
+    ]
 };
 
 module.exports = ({mode}) => {
