@@ -32,8 +32,22 @@
                     background: lightgreen;
                 }
             }
-
         }
 
+        .filters-checkbox {
+            max-height: 140px;
+            overflow: auto;
+            border-radius: 10px;
+            border: 3px solid;
+            input{
+                margin-bottom: 10px;
+            }
+
+
+            legend {
+                padding: 0 2%;
+                font-weight: bold;
+            }
+        }
     }
 }
