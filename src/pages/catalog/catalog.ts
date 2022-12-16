@@ -106,7 +106,7 @@ export default function createCatalog(products: Product[]): void {
         inputLower.type = 'range';
         inputLower.min = '1';
         inputLower.max = '100';
-        inputLower.value = '1';
+        inputLower.value = inputLower.min;
         div.append(inputLower);
 
         const inputUpper = document.createElement('input');
@@ -114,7 +114,7 @@ export default function createCatalog(products: Product[]): void {
         inputUpper.type = 'range';
         inputUpper.min = '1';
         inputUpper.max = '100';
-        inputUpper.value = '100';
+        inputUpper.value = inputUpper.max;
         div.append(inputUpper);
 
         filterValue.innerHTML = `${inputLower.value} - ${inputUpper.value}`;
