@@ -134,4 +134,82 @@ export default function createCatalog(products: Product[]): void {
 
     createRangeFilter('price');
     createRangeFilter('stock');
+
+    const productsWrapper = document.createElement('div');
+    productsWrapper.className = 'products';
+    mainContainer.append(productsWrapper);
+
+    function createSortBlock() {
+        const productsSort = document.createElement('div');
+        productsSort.className = 'products__sort';
+        productsWrapper.append(productsSort);
+
+        const sortOptions = document.createElement('select');
+        sortOptions.className = 'sort__options';
+        productsSort.append(sortOptions);
+
+        function createOption(value: string, inner: string): void {
+            const option = document.createElement('option');
+            option.value = value;
+            option.className = 'sort-name';
+            option.innerHTML = inner;
+            sortOptions.append(option);
+        }
+
+        createOption('sort-title', 'Sort options:');
+        createOption('price-high', 'Price: High to Low');
+        createOption('price-low', 'Price: Low to High');
+        createOption('rating-a', 'Name: A to Z');
+        createOption('rating-z', 'Name: Z to A');
+
+        const sortStat = document.createElement('div');
+        sortStat.className = 'sort__stat';
+        productsSort.append(sortStat);
+
+        const sortStatName = document.createElement('div');
+        sortStatName.className = 'sort__stat_name';
+        sortStatName.innerHTML = 'Found:';
+        sortStat.append(sortStatName);
+
+        const sortStatValue = document.createElement('div');
+        sortStatValue.className = 'sort__stat_value';
+        sortStatValue.innerHTML = '74'; //TODO поменять на переменную
+        sortStat.append(sortStatValue);
+
+        const sortSearch = document.createElement('input');
+        sortSearch.id = 'sort_search';
+        sortSearch.type = 'search';
+        sortSearch.placeholder = 'Search product';
+        productsSort.append(sortSearch);
+
+        const sortView = document.createElement('div');
+        sortView.className = 'sort__view';
+        productsSort.append(sortView);
+
+        const sortViewGrid = document.createElement('div');
+        sortViewGrid.className = 'sort__view_grid';
+        sortViewGrid.title = 'Grid';
+        sortView.append(sortViewGrid);
+
+        const div1 = document.createElement('div');
+        sortViewGrid.append(div1);
+        const div2 = document.createElement('div');
+        sortViewGrid.append(div2);
+        const div3 = document.createElement('div');
+        sortViewGrid.append(div3);
+        const div4 = document.createElement('div');
+        sortViewGrid.append(div4);
+
+        const sortViewList = document.createElement('div');
+        sortViewList.className = 'sort__view_list';
+        sortViewList.title = 'List';
+        sortView.append(sortViewList);
+
+        const div5 = document.createElement('div');
+        sortViewList.append(div5);
+        const div6 = document.createElement('div');
+        sortViewList.append(div6);
+    }
+
+    createSortBlock();
 }
