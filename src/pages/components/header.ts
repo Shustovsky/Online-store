@@ -44,7 +44,7 @@ export default function createHeader(shoppingCart: ShoppingCart): void {
 
     const priceNumb = document.createElement('div');
     priceNumb.className = 'price_numb';
-    priceNumb.innerHTML = shoppingCart.totalPrice;
+    priceNumb.innerHTML = `€ ${shoppingCart.totalPrice}`;
     price.append(priceNumb);
 
     const cart = document.createElement('div');

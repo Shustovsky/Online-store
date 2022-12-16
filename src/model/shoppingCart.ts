@@ -1,4 +1,4 @@
 export type ShoppingCart = {
-    totalPrice: string;
+    totalPrice: number;
     productsCount: number;
 };
