@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: 1fr 5fr;
     padding-top: 1%;
+    gap: 1%;
 
     .filters {
         display: flex;
@@ -39,7 +40,8 @@
             overflow: auto;
             border-radius: 10px;
             border: 3px solid;
-            input{
+
+            input {
                 margin-bottom: 10px;
             }
 
@@ -48,10 +50,14 @@
                 padding: 0 2%;
                 font-weight: bold;
             }
+            label{
+                padding-left: 5px;
+            }
         }
+
         .filters-range {
             position: relative;
-            height: 80px;
+            height: 85px;
             border-radius: 10px;
             border: 3px solid;
 
@@ -95,9 +101,101 @@
             }
         }
 
-        .filters__price{
-            .filters-range_value:after{
+        .filters__price {
+            .filters-range_value:after {
                 content: ' €';
+            }
+        }
+    }
+
+    .products {
+        border: 1px solid;
+        border-radius: 10px;
+        padding: 1%;
+
+        &__sort {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+
+            .sort__options {
+                border-radius: 10px;
+            }
+
+            .sort__stat {
+                display: flex;
+                gap: 10px;
+
+                &_value {
+                    font-weight: bold;
+                }
+            }
+
+
+            #sort_search {
+                border: 0.7px solid;
+                border-radius: 10px;
+                padding: 2px 10px;
+
+                &::placeholder {
+                    color: #BDBDBD;
+                }
+
+                &:focus {
+                    outline: none;
+                    border: 0.7px solid #4B9200;
+                }
+            }
+
+
+            .sort__view {
+                display: flex;
+                gap: 20px;
+
+                .active {
+                    div {
+                        background: lightcoral;
+                    }
+                }
+
+                &_grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    grid-template-rows: 1fr 1fr;
+                    gap: 3px;
+                    cursor: pointer;
+
+                    div {
+                        width: 8px;
+                        height: 8px;
+                        background: #808d9a;
+                        border-radius: 2px;
+                        transition: 0.7s all;
+                    }
+
+                    &:hover div {
+                        background: lightcoral;
+                    }
+                }
+
+                &_list {
+                    display: flex;
+                    flex-direction: column;
+                    cursor: pointer;
+                    justify-content: space-between;
+
+                    div {
+                        width: 20px;
+                        height: 8px;
+                        background: #808d9a;
+                        border-radius: 3px;
+                        transition: 0.7s all;
+                    }
+
+                    &:hover div {
+                        background: lightcoral;
+                    }
+                }
             }
         }
     }
