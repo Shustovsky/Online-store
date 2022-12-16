@@ -49,5 +49,56 @@
                 font-weight: bold;
             }
         }
+        .filters-range {
+            position: relative;
+            height: 80px;
+            border-radius: 10px;
+            border: 3px solid;
+
+            legend {
+                padding: 0 3%;
+                font-weight: bold;
+            }
+
+            .input-range {
+                position: absolute;
+                appearance: none;
+                width: 90%;
+                overflow: hidden;
+                border: 0;
+                background: linear-gradient(grey, grey) no-repeat center;
+                background-size: 100% 2px;
+                pointer-events: none;
+
+                &:nth-child(2) {
+                    background: none;
+
+                }
+
+                &:active,
+                &:focus {
+                    outline: none;
+                }
+
+                &::-webkit-slider-thumb {
+                    height: 28px;
+                    width: 28px;
+                    border-radius: 28px;
+                    background-color: #fff;
+                    margin: 5px 0;
+                    cursor: pointer;
+                    appearance: none;
+                    pointer-events: all;
+                    box-shadow: 0 1px 4px 0.5px rgba(0, 0, 0, 0.25);
+
+                }
+            }
+        }
+
+        .filters__price{
+            .filters-range_value:after{
+                content: ' €';
+            }
+        }
     }
 }

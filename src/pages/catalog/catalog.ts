@@ -34,7 +34,7 @@ export default function createCatalog(products: Product[]): void {
     btnCopy.innerHTML = 'Reset Filters';
     filtersButtons.append(btnCopy);
 
-    function createFilter(name: string): void {
+    function createCheckboxFilter(name: string): void {
         const filtersCategory = document.createElement('div');
         filtersCategory.className = `filters__${name}`;
         filters.append(filtersCategory);
@@ -78,6 +78,60 @@ export default function createCatalog(products: Product[]): void {
         });
     }
 
-    createFilter('category');
-    createFilter('brand');
+    createCheckboxFilter('category');
+    createCheckboxFilter('brand');
+
+    function createRangeFilter(name: string): void {
+        const filtersCategory = document.createElement('div');
+        filtersCategory.className = `filters__${name}`;
+        filters.append(filtersCategory);
+
+        const filtersRange = document.createElement('fieldset');
+        filtersRange.className = 'filters-range';
+        filtersCategory.append(filtersRange);
+
+        const legend = document.createElement('legend');
+        legend.innerHTML = `${name}`;
+        filtersRange.append(legend);
+
+        const filterValue = document.createElement('div');
+        filterValue.className = 'filters-range_value';
+        filtersRange.append(filterValue);
+
+        const div = document.createElement('div');
+        filtersRange.append(div);
+
+        const inputLower = document.createElement('input');
+        inputLower.className = 'input-range lower';
+        inputLower.type = 'range';
+        inputLower.min = '1';
+        inputLower.max = '100';
+        inputLower.value = inputLower.min;
+        div.append(inputLower);
+
+        const inputUpper = document.createElement('input');
+        inputUpper.className = 'input-range lower';
+        inputUpper.type = 'range';
+        inputUpper.min = '1';
+        inputUpper.max = '100';
+        inputUpper.value = inputUpper.max;
+        div.append(inputUpper);
+
+        filterValue.innerHTML = `${inputLower.value} - ${inputUpper.value}`;
+
+        function setValue(input: HTMLInputElement): void {
+            input.oninput = function (): void {
+                const lowerVal = parseInt(inputLower.value);
+                const upperVal = parseInt(inputUpper.value);
+
+                filterValue.innerHTML = lowerVal < upperVal ? `${lowerVal} - ${upperVal}` : `${upperVal} - ${lowerVal}`;
+            };
+        }
+
+        setValue(inputLower);
+        setValue(inputUpper);
+    }
+
+    createRangeFilter('price');
+    createRangeFilter('stock');
 }
