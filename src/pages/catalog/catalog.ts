@@ -310,6 +310,5 @@ export default function createCatalog(products: Product[]): void {
         detailsButton.innerHTML = 'DETAILS';
         itemButtons.append(detailsButton);
     }
-
-    products.forEach(item => createItems(item));
+    products.forEach((item) => createItems(item));
 }
