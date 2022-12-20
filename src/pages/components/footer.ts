@@ -46,5 +46,4 @@ export default function createFooter(): void {
     footerLogoImg.src = './assets/icons/rs_school_js.svg';
     footerLogoImg.alt = 'rs_school logo';
     footerLogo.append(footerLogoImg);
-
 }
