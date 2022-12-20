@@ -15,11 +15,12 @@ html {
 
 .container {
   margin: 0 auto;
-  max-width: 1160px;
+  max-width: 1260px;
   position: relative;
 }
 
 @import './pages/catalog/catalog.scss';
 @import './pages/product/product.scss';
 @import './pages/components/header.scss';
+@import './pages/components/footer.scss';
 @import './pages/shoppingcart/shoppingcart.scss';

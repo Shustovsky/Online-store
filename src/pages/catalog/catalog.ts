@@ -134,4 +134,181 @@ export default function createCatalog(products: Product[]): void {
 
     createRangeFilter('price');
     createRangeFilter('stock');
+
+    const productsWrapper = document.createElement('div');
+    productsWrapper.className = 'products';
+    mainContainer.append(productsWrapper);
+
+    function createSortBlock() {
+        const productsSort = document.createElement('div');
+        productsSort.className = 'products__sort';
+        productsWrapper.append(productsSort);
+
+        const sortOptions = document.createElement('select');
+        sortOptions.className = 'sort__options';
+        productsSort.append(sortOptions);
+
+        function createOption(value: string, inner: string): void {
+            const option = document.createElement('option');
+            option.value = value;
+            option.className = 'sort-name';
+            option.innerHTML = inner;
+            sortOptions.append(option);
+        }
+
+        createOption('sort-title', 'Sort options:');
+        createOption('price-high', 'Price: High to Low');
+        createOption('price-low', 'Price: Low to High');
+        createOption('rating-a', 'Name: A to Z');
+        createOption('rating-z', 'Name: Z to A');
+
+        const sortStat = document.createElement('div');
+        sortStat.className = 'sort__stat';
+        productsSort.append(sortStat);
+
+        const sortStatName = document.createElement('div');
+        sortStatName.className = 'sort__stat_name';
+        sortStatName.innerHTML = 'Found:';
+        sortStat.append(sortStatName);
+
+        const sortStatValue = document.createElement('div');
+        sortStatValue.className = 'sort__stat_value';
+        sortStatValue.innerHTML = '74'; //TODO поменять на переменную
+        sortStat.append(sortStatValue);
+
+        const sortSearch = document.createElement('input');
+        sortSearch.id = 'sort_search';
+        sortSearch.type = 'search';
+        sortSearch.placeholder = 'Search product';
+        productsSort.append(sortSearch);
+
+        const sortView = document.createElement('div');
+        sortView.className = 'sort__view';
+        productsSort.append(sortView);
+
+        const sortViewGrid = document.createElement('div');
+        sortViewGrid.className = 'sort__view_grid';
+        sortViewGrid.title = 'Grid';
+        sortView.append(sortViewGrid);
+
+        const div1 = document.createElement('div');
+        sortViewGrid.append(div1);
+        const div2 = document.createElement('div');
+        sortViewGrid.append(div2);
+        const div3 = document.createElement('div');
+        sortViewGrid.append(div3);
+        const div4 = document.createElement('div');
+        sortViewGrid.append(div4);
+
+        const sortViewList = document.createElement('div');
+        sortViewList.className = 'sort__view_list';
+        sortViewList.title = 'List';
+        sortView.append(sortViewList);
+
+        const div5 = document.createElement('div');
+        sortViewList.append(div5);
+        const div6 = document.createElement('div');
+        sortViewList.append(div6);
+    }
+
+    createSortBlock();
+
+    const productsItems = document.createElement('div');
+    productsItems.className = 'products__items';
+    productsWrapper.append(productsItems);
+
+    function createItems(product: Product): void {
+        const item = document.createElement('div');
+        item.className = 'item';
+        productsItems.append(item);
+
+        const itemName = document.createElement('div');
+        itemName.className = 'item_name';
+        itemName.innerHTML = product.title;
+        item.append(itemName);
+
+        const itemImgContainer = document.createElement('div');
+        itemImgContainer.className = 'item_img';
+        item.append(itemImgContainer);
+
+        const img = document.createElement('img');
+        img.src = product.thumbnail;
+        img.alt = `${product.title} photo`;
+        itemImgContainer.append(img);
+
+        const itemDscr = document.createElement('div');
+        itemDscr.className = 'item__dscr';
+        item.append(itemDscr);
+
+        const itemDscrCategory = document.createElement('div');
+        itemDscrCategory.className = 'item__dscr_category';
+        itemDscrCategory.innerHTML = 'Category: ';
+        itemDscr.append(itemDscrCategory);
+
+        const spanCategory = document.createElement('span');
+        spanCategory.innerHTML = product.category;
+        itemDscrCategory.append(spanCategory);
+
+        const itemDscrBrand = document.createElement('div');
+        itemDscrBrand.className = 'item__dscr_brand';
+        itemDscrBrand.innerHTML = 'Brand: ';
+        itemDscr.append(itemDscrBrand);
+
+        const spanBrand = document.createElement('span');
+        spanBrand.innerHTML = product.brand;
+        itemDscrBrand.append(spanBrand);
+
+        const itemDscrPrice = document.createElement('div');
+        itemDscrPrice.className = 'item__dscr_price';
+        itemDscrPrice.innerHTML = 'Price: ';
+        itemDscr.append(itemDscrPrice);
+
+        const spanPrice = document.createElement('span');
+        spanPrice.innerHTML = `€${product.price}`;
+        itemDscrPrice.append(spanPrice);
+
+        const itemDscrDiscount = document.createElement('div');
+        itemDscrDiscount.className = 'item__dscr_discount';
+        itemDscrDiscount.innerHTML = 'Discount: ';
+        itemDscr.append(itemDscrDiscount);
+
+        const spanDiscount = document.createElement('span');
+        spanDiscount.innerHTML = `${product.discountPercentage}%`;
+        itemDscrDiscount.append(spanDiscount);
+
+        const itemDscrRating = document.createElement('div');
+        itemDscrRating.className = 'item__dscr_rating';
+        itemDscrRating.innerHTML = 'Rating: ';
+        itemDscr.append(itemDscrRating);
+
+        const spanRating = document.createElement('span');
+        spanRating.innerHTML = `${product.rating}`;
+        itemDscrRating.append(spanRating);
+
+        const itemDscrStock = document.createElement('div');
+        itemDscrStock.className = 'item__dscr_stock';
+        itemDscrStock.innerHTML = 'Stock: ';
+        itemDscr.append(itemDscrStock);
+
+        const spanStock = document.createElement('span');
+        spanStock.innerHTML = `${product.stock}`;
+        itemDscrStock.append(spanStock);
+
+        const itemButtons = document.createElement('div');
+        itemButtons.className = 'item__buttons';
+        item.append(itemButtons);
+
+        const addButton = document.createElement('button');
+        addButton.className = 'item__buttons_btn';
+        addButton.id = 'add_btn';
+        addButton.innerHTML = 'ADD TO CART';
+        itemButtons.append(addButton);
+
+        const detailsButton = document.createElement('button');
+        detailsButton.className = 'item__buttons_btn';
+        detailsButton.id = 'details_btn';
+        detailsButton.innerHTML = 'DETAILS';
+        itemButtons.append(detailsButton);
+    }
+    products.forEach((item) => createItems(item));
 }
