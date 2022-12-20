@@ -105,7 +105,7 @@ function createProductDescription(product: Product, productDescription: HTMLDivE
         const photoMini = document.createElement('img');
         photoMini.className = 'photo-mini';
         photoMini.src = imageUrl;
-        photoMini.alt = '#';
+        photoMini.alt = `${product.title} photo`;
         productPhotoMini.append(photoMini);
     });
 
@@ -115,7 +115,7 @@ function createProductDescription(product: Product, productDescription: HTMLDivE
     const photoBig = document.createElement('img');
     photoBig.className = 'photo-big';
     photoBig.src = product.images[0]; //todo change on click
-    photoBig.alt = '#';
+    photoBig.alt = `${product.title} photo`;
 
     productPhotoBig.append(photoBig);
     productPhotos.append(productPhotoMini);
