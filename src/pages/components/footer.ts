@@ -13,14 +13,26 @@ export default function createFooter(): void {
     footerContainer.className = 'footer_container';
     container.append(footerContainer);
 
+    const footerDate = createDate();
+    footerContainer.append(footerDate);
+
+    const footerGits = createGits();
+    footerContainer.append(footerGits);
+
+    const footerLogo = createLogo();
+    footerContainer.append(footerLogo);
+}
+
+function createDate(): HTMLDivElement {
     const footerDate = document.createElement('div');
     footerDate.className = 'footer_date';
     footerDate.innerHTML = '© 2022';
-    footerContainer.append(footerDate);
+    return footerDate;
+}
 
+function createGits(): HTMLDivElement {
     const footerGits = document.createElement('div');
     footerGits.className = 'footer__gits';
-    footerContainer.append(footerGits);
 
     const footerGit1 = document.createElement('a');
     footerGit1.className = 'footer__gits_link';
@@ -36,14 +48,19 @@ export default function createFooter(): void {
     footerGit2.innerHTML = 'NadzeyaShu';
     footerGits.append(footerGit2);
 
+    return footerGits;
+}
+
+function createLogo(): HTMLElement {
     const footerLogo = document.createElement('a');
     footerLogo.className = 'footer_logo';
     footerLogo.href = 'https://rs.school/js/';
     footerLogo.target = '_blank';
-    footerContainer.append(footerLogo);
 
     const footerLogoImg = document.createElement('img');
     footerLogoImg.src = './assets/icons/rs_school_js.svg';
     footerLogoImg.alt = 'rs_school logo';
     footerLogo.append(footerLogoImg);
+
+    return footerLogo;
 }
