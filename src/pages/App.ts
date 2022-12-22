@@ -2,6 +2,7 @@ import { CatalogController } from './catalog/catalogController';
 import { Header } from './components/headerView';
 import { Footer } from './components/footerView';
 import products from './../assets/json/products.json';
+import { PageNotFound } from './components/pageNotFound';
 
 export const enum Categories {
     CATALOG_PATH = 'catalog',
@@ -12,12 +13,14 @@ export const enum Categories {
 export class App {
     header: Header;
     footer: Footer;
+    pageNotFound: PageNotFound;
     catalogController: CatalogController;
 
     constructor() {
         this.header = new Header();
         this.footer = new Footer();
         this.catalogController = new CatalogController();
+        this.pageNotFound = new PageNotFound();
         //TODO добавить product и shoppingCart
     }
 
@@ -34,9 +37,8 @@ export class App {
         } else if (url === Categories.SHOPPING_CART_PATH) {
             //TODO добавить shoppingCartController
         } else {
-            console.log('404')
+            this.pageNotFound.createPageNotFound();
         }
-
     }
 
     enableRouteChange() {
@@ -50,8 +52,8 @@ export class App {
         this.header.createHeader({
             totalPrice: 20000,
             productsCount: 2,
-            products: [{ product: products.products[0], count: 1 }]
-        }) //test shoppingcart
+            products: [{ product: products.products[0], count: 1 }],
+        }); //test shoppingcart
         this.footer.createFooter();
         if (window.location.hash === '') {
             this.catalogController.catalogView.createCatalog(products.products);
