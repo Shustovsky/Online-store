@@ -24,8 +24,7 @@ export class Header {
         const cartBlock = this.createCart(shoppingCart);
         headerContainer.append(cartBlock);
     }
-
-     createLogo(): HTMLDivElement {
+    createLogo(): HTMLDivElement {
         const logo = document.createElement('div');
         logo.className = 'logo';
 
@@ -64,7 +63,7 @@ export class Header {
         return price;
     }
 
-     createCart(shoppingCart: ShoppingCart): HTMLDivElement {
+    createCart(shoppingCart: ShoppingCart): HTMLDivElement {
         const cart = document.createElement('div');
         cart.className = 'cart';
 
