@@ -1,6 +1,8 @@
 import { Product } from '../../model/product';
+// import { CatalogController } from './catalogController';
 
 export class CatalogView {
+    // catalogController: CatalogController;
     createCatalog(products: Product[]): void {
         const header = document.querySelector('.header') as HTMLElement;
 
@@ -35,6 +37,7 @@ export class CatalogView {
 
         this.changeView();
     }
+
     createFilters(products: Product[]): HTMLDivElement {
         const filters = document.createElement('div');
         filters.className = 'filters';
@@ -63,6 +66,7 @@ export class CatalogView {
 
         return filters;
     }
+
     createBtn(name: string): HTMLButtonElement {
         const btn = document.createElement('button');
         btn.id = `btn_${name}`;
@@ -71,6 +75,7 @@ export class CatalogView {
 
         return btn;
     }
+
     createCheckboxFilter(name: string, products: Product[]): HTMLDivElement {
         const filtersCategory = document.createElement('div');
         filtersCategory.className = `filters__${name}`;
@@ -115,6 +120,7 @@ export class CatalogView {
 
         return filtersCategory;
     }
+
     createRangeFilter(name: string): HTMLDivElement {
         const filtersCategory = document.createElement('div');
         filtersCategory.className = `filters__${name}`;
@@ -152,6 +158,7 @@ export class CatalogView {
 
         return filtersCategory;
     }
+
     setValueRangeFilter(div: HTMLDivElement): void {
         const inputLower = div.querySelector('.lower') as HTMLInputElement;
         const inputUpper = div.querySelector('.upper') as HTMLInputElement;
@@ -171,6 +178,7 @@ export class CatalogView {
             filterValue.innerHTML = lowerVal < upperVal ? `${lowerVal} - ${upperVal}` : `${upperVal} - ${lowerVal}`;
         };
     }
+
     createSortBlock(): HTMLDivElement {
         const productsSort = document.createElement('div');
         productsSort.className = 'products__sort';
@@ -241,6 +249,7 @@ export class CatalogView {
 
         return productsSort;
     }
+
     createOption(value: string, inner: string): HTMLOptionElement {
         const option = document.createElement('option');
         option.value = value;
@@ -249,6 +258,7 @@ export class CatalogView {
 
         return option;
     }
+
     createItems(product: Product): HTMLDivElement {
         const item = document.createElement('div');
         item.className = 'item';
@@ -343,6 +353,7 @@ export class CatalogView {
 
         return item;
     }
+
     changeView(): void {
         const sortViewGrid = document.querySelector('.sort__view_grid') as HTMLDivElement;
         const sortViewList = document.querySelector('.sort__view_list') as HTMLDivElement;
