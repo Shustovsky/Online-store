@@ -3,6 +3,8 @@ import { Header } from './components/headerView';
 import { Footer } from './components/footerView';
 import products from './../assets/json/products.json';
 import { PageNotFound } from './components/pageNotFound';
+import { productView } from './product/productView';
+import { shoppingCartView } from './shoppingcart/shoppingCartView';
 
 export const enum Categories {
     CATALOG_PATH = 'catalog',
@@ -24,40 +26,46 @@ export class App {
         //TODO добавить product и shoppingCart
     }
 
-    renderNewPage(url: string) {
+    renderNewPage(url: string): void {
         const main = document.querySelector('main') as HTMLElement;
         if (main) {
             main.remove();
         }
 
-        if (url === Categories.CATALOG_PATH || url === '') {
+        if (url.includes(Categories.CATALOG_PATH) || url === '') {
             this.catalogController.drawPage();
-        } else if (url === Categories.PRODUCT_PATH) {
+        } else if (url.includes(Categories.PRODUCT_PATH)) {
             //TODO добавить productController
-        } else if (url === Categories.SHOPPING_CART_PATH) {
-            //TODO добавить shoppingCartController
+
+            new productView().renderProduct(products.products[0]);
+        } else if (url.includes(Categories.SHOPPING_CART_PATH)) {
+            new shoppingCartView().renderShoppingCart({
+                totalPrice: 20000,
+                productsCount: 2,
+                products: [{ product: products.products[0], count: 1 }],
+            })
         } else {
             this.pageNotFound.createPageNotFound();
         }
     }
 
-    enableRouteChange() {
-        window.addEventListener('hashchange', () => {
-            const hash = window.location.hash.slice(1);
-            this.renderNewPage(hash);
-        });
+    enableRouteChange(): void {
+        window.addEventListener('hashchange', () => this.checkHashAndRender());
     }
 
-    run() {
+    checkHashAndRender(): void {
+        const hash = window.location.hash.slice(1);
+        this.renderNewPage(hash);
+    }
+
+    run(): void {
         this.header.createHeader({
             totalPrice: 20000,
             productsCount: 2,
             products: [{ product: products.products[0], count: 1 }],
         }); //test shoppingcart
         this.footer.createFooter();
-        if (window.location.hash === '') {
-            this.catalogController.catalogView.createCatalog(products.products);
-        }
         this.enableRouteChange();
+        this.checkHashAndRender();
     }
 }
