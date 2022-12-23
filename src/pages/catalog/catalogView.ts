@@ -380,7 +380,7 @@ export class CatalogView {
             const btn = item.querySelector('.details_btn') as HTMLButtonElement;
             btn.addEventListener('click', () => {
                 const itemID = item.getAttribute('data-id');
-                window.location.href = `#product[${itemID}]`;
+                window.location.href = `#product?id=${itemID}`;
             })
         })
 
