@@ -1,12 +1,13 @@
 import { Product } from '../../model/product';
 import { ShoppingCart } from '../../model/shoppingCart';
 
-export class shoppingCartView {
+export class ShoppingCartView {
     public renderShoppingCart(shoppingCart: ShoppingCart): void {
-        const body = document.body;
+        const header = document.querySelector('.header') as HTMLElement;
+
         const mainElement = document.createElement('main');
         mainElement.className = 'shoppingcart';
-        body.append(mainElement);
+        header.after(mainElement);
 
         const container = document.createElement('div');
         container.className = 'container';

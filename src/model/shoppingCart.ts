@@ -1,7 +1,7 @@
 import { Product } from './product';
 
-export type ShoppingCart = {
-    totalPrice: number;
-    productsCount: number;
-    products: { product: Product; count: number }[];
-};
+export class ShoppingCart {
+    totalPrice = 0;
+    productsCount = 0;
+    products: { product: Product; count: number }[] = [];
+}

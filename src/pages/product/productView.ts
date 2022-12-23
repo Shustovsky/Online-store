@@ -1,11 +1,12 @@
 import { Product } from '../../model/product';
 
-export class productView {
+export class ProductView {
     public renderProduct(product: Product): void {
-        const body = document.body;
+        const header = document.querySelector('.header') as HTMLElement;
+
         const mainElement = document.createElement('main');
         mainElement.className = 'product';
-        body.append(mainElement);
+        header.after(mainElement);
 
         const container = document.createElement('div');
         container.className = 'container';
@@ -80,14 +81,24 @@ export class productView {
         const productDetails = document.createElement('div');
         productDetails.className = 'product__details';
 
-        this.createProductDetailsElements('Description:', product.description, 'product__item-description', productDetails);
+        this.createProductDetailsElements(
+            'Description:',
+            product.description,
+            'product__item-description',
+            productDetails
+        );
         this.createProductDetailsElements(
             'Discount Percentage:',
             product.discountPercentage.toString(),
             'product__details-discount',
             productDetails
         );
-        this.createProductDetailsElements('Rating:', product.rating.toString(), 'product__details-rating', productDetails);
+        this.createProductDetailsElements(
+            'Rating:',
+            product.rating.toString(),
+            'product__details-rating',
+            productDetails
+        );
         this.createProductDetailsElements('Stock:', product.stock.toString(), 'product__details-stock', productDetails);
         this.createProductDetailsElements('Brand:', product.brand, 'product__details-brand', productDetails);
         this.createProductDetailsElements('Category:', product.category, 'product__details-category', productDetails);
@@ -169,4 +180,3 @@ export class productView {
         productWrapperPrice.append(productBtnBuy);
     }
 }
-

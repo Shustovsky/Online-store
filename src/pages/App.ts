@@ -1,10 +1,10 @@
 import { CatalogController } from './catalog/catalogController';
-import { Header } from './components/headerView';
+import { HeaderView } from './components/headerView';
 import { Footer } from './components/footerView';
-import products from './../assets/json/products.json';
 import { PageNotFound } from './components/pageNotFound';
-import { productView } from './product/productView';
-import { shoppingCartView } from './shoppingcart/shoppingCartView';
+import { ShoppingCartController } from './shoppingcart/shoppingCartController';
+import { ProductController } from './product/productController';
+import { HeaderController } from './components/headerController';
 
 export const enum Categories {
     CATALOG_PATH = 'catalog',
@@ -13,17 +13,22 @@ export const enum Categories {
 }
 
 export class App {
-    header: Header;
+    header: HeaderView;
     footer: Footer;
     pageNotFound: PageNotFound;
     catalogController: CatalogController;
+    shoppingCartController: ShoppingCartController;
+    productController: ProductController;
+    headerController: HeaderController;
 
     constructor() {
-        this.header = new Header();
+        this.header = new HeaderView();
         this.footer = new Footer();
         this.catalogController = new CatalogController();
         this.pageNotFound = new PageNotFound();
-        //TODO добавить product и shoppingCart
+        this.shoppingCartController = new ShoppingCartController();
+        this.productController = new ProductController();
+        this.headerController = new HeaderController();
     }
 
     renderNewPage(url: string): void {
@@ -35,15 +40,10 @@ export class App {
         if (url.includes(Categories.CATALOG_PATH) || url === '') {
             this.catalogController.drawPage();
         } else if (url.includes(Categories.PRODUCT_PATH)) {
-            //TODO добавить productController
-
-            new productView().renderProduct(products.products[0]);
-        } else if (url.includes(Categories.SHOPPING_CART_PATH)) {
-            new shoppingCartView().renderShoppingCart({
-                totalPrice: 20000,
-                productsCount: 2,
-                products: [{ product: products.products[0], count: 1 }],
-            })
+            const id = +this.getQueryParam('id');
+            this.productController.drawPage(id);
+        } else if (url === Categories.SHOPPING_CART_PATH) {
+            this.shoppingCartController.drawPage();
         } else {
             this.pageNotFound.createPageNotFound();
         }
@@ -59,13 +59,15 @@ export class App {
     }
 
     run(): void {
-        this.header.createHeader({
-            totalPrice: 20000,
-            productsCount: 2,
-            products: [{ product: products.products[0], count: 1 }],
-        }); //test shoppingcart
+        this.headerController.drawHeader();
         this.footer.createFooter();
         this.enableRouteChange();
         this.checkHashAndRender();
+    }
+
+    private getQueryParam(paramName: string): string {
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());
+        return params[paramName];
     }
 }
