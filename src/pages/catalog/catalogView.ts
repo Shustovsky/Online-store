@@ -1,4 +1,5 @@
 import { Product } from '../../model/product';
+
 // import { CatalogController } from './catalogController';
 
 export class CatalogView {
@@ -35,6 +36,7 @@ export class CatalogView {
 
         products.forEach((item) => productsItems.append(this.createItems(item)));
 
+        this.detailsBtnFunc();
         this.changeView();
     }
 
@@ -262,6 +264,7 @@ export class CatalogView {
     createItems(product: Product): HTMLDivElement {
         const item = document.createElement('div');
         item.className = 'item';
+        item.setAttribute('data-id', `${product.id}`);
 
         const itemName = document.createElement('div');
         itemName.className = 'item_name';
@@ -340,14 +343,12 @@ export class CatalogView {
         item.append(itemButtons);
 
         const addButton = document.createElement('button');
-        addButton.className = 'item__buttons_btn';
-        addButton.id = 'add_btn';
+        addButton.className = 'item__buttons_btn add_btn';
         addButton.innerHTML = 'ADD TO CART';
         itemButtons.append(addButton);
 
         const detailsButton = document.createElement('button');
-        detailsButton.className = 'item__buttons_btn';
-        detailsButton.id = 'details_btn';
+        detailsButton.className = 'item__buttons_btn details_btn';
         detailsButton.innerHTML = 'DETAILS';
         itemButtons.append(detailsButton);
 
@@ -370,5 +371,18 @@ export class CatalogView {
             sortViewList.classList.toggle('active');
             sortViewGrid.classList.toggle('active');
         });
+    }
+
+    detailsBtnFunc(): void {
+        const items = document.querySelectorAll('.item');
+        // const
+        items.forEach((item) => {
+            const btn = item.querySelector('.details_btn') as HTMLButtonElement;
+            btn.addEventListener('click', () => {
+                const itemID = item.getAttribute('data-id');
+                window.location.href = `#product[${itemID}]`;
+            })
+        })
+
     }
 }
