@@ -381,8 +381,7 @@ export class CatalogView {
             btn.addEventListener('click', () => {
                 const itemID = item.getAttribute('data-id');
                 window.location.href = `#product?id=${itemID}`;
-            })
-        })
-
+            });
+        });
     }
 }

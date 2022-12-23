@@ -1,6 +1,6 @@
 import { ShoppingCart } from '../../model/shoppingCart';
 
-export class Header {
+export class HeaderView {
     createHeader(shoppingCart: ShoppingCart): void {
         const body = document.body;
         const header = document.createElement('header');
@@ -66,9 +66,9 @@ export class Header {
     createCart(shoppingCart: ShoppingCart): HTMLDivElement {
         const cart = document.createElement('div');
         cart.className = 'cart';
-        cart.onclick = function (){
+        cart.onclick = function () {
             window.location.href = '#shoppingcart';
-        }
+        };
 
         const cartImg = document.createElement('img');
         cartImg.className = 'cart_img';
