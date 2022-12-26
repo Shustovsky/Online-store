@@ -1,9 +1,13 @@
 import { Product } from '../../model/product';
-
-// import { CatalogController } from './catalogController';
+import {CatalogController} from "./catalogController";
 
 export class CatalogView {
-    // catalogController: CatalogController;
+    catalogController: CatalogController | null;
+
+    constructor(catalogController: CatalogController | null) {
+        this.catalogController = catalogController;
+    }
+
     createCatalog(products: Product[]): void {
         const header = document.querySelector('.header') as HTMLElement;
 
@@ -345,6 +349,7 @@ export class CatalogView {
         const addButton = document.createElement('button');
         addButton.className = 'item__buttons_btn add_btn';
         addButton.innerHTML = 'ADD TO CART';
+        addButton.addEventListener("click", (ev) => this.catalogController?.addItemToShoppingCart(product.id))
         itemButtons.append(addButton);
 
         const detailsButton = document.createElement('button');

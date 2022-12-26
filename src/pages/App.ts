@@ -35,8 +35,9 @@ export class App {
         const shoppingcartService = new ShoppingcartService(productService);
         const catalogService = new CatalogService(productService);
 
-        const catalogView = new CatalogView();
-        this.catalogController = new CatalogController(catalogService, catalogView);
+        const catalogView = new CatalogView(null);
+        this.catalogController = new CatalogController(catalogService, shoppingcartService, catalogView, this.header);
+        catalogView.catalogController = this.catalogController;
 
         const shoppingCartView = new ShoppingCartView(null);
         this.shoppingCartController = new ShoppingCartController(shoppingcartService, shoppingCartView, this.header);
