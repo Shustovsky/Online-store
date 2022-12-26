@@ -1,5 +1,5 @@
-import {HeaderView} from './headerView';
-import {ShoppingcartService} from '../shoppingcart/shoppingcartService';
+import { HeaderView } from './headerView';
+import { ShoppingcartService } from '../shoppingcart/shoppingcartService';
 
 export class HeaderController {
     headerView: HeaderView;

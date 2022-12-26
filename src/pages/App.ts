@@ -1,16 +1,16 @@
-import {CatalogController} from './catalog/catalogController';
-import {HeaderView} from './components/headerView';
-import {Footer} from './components/footerView';
-import {PageNotFound} from './components/pageNotFound';
-import {ShoppingCartController} from './shoppingcart/shoppingCartController';
-import {ProductController} from './product/productController';
-import {HeaderController} from './components/headerController';
-import {CatalogService} from "./catalog/catalogService";
-import {CatalogView} from "./catalog/catalogView";
-import {ShoppingcartService} from "./shoppingcart/shoppingcartService";
-import {ProductService} from "./product/productService";
-import {ShoppingCartView} from "./shoppingcart/shoppingCartView";
-import {ProductView} from "./product/productView";
+import { CatalogController } from './catalog/catalogController';
+import { HeaderView } from './components/headerView';
+import { Footer } from './components/footerView';
+import { PageNotFound } from './components/pageNotFound';
+import { ShoppingCartController } from './shoppingcart/shoppingCartController';
+import { ProductController } from './product/productController';
+import { HeaderController } from './components/headerController';
+import { CatalogService } from './catalog/catalogService';
+import { CatalogView } from './catalog/catalogView';
+import { ShoppingcartService } from './shoppingcart/shoppingcartService';
+import { ProductService } from './product/productService';
+import { ShoppingCartView } from './shoppingcart/shoppingCartView';
+import { ProductView } from './product/productView';
 
 export const enum Categories {
     CATALOG_PATH = 'catalog',
@@ -31,19 +31,18 @@ export class App {
         this.header = new HeaderView();
         this.footer = new Footer();
 
-        let productService = new ProductService();
-        let shoppingcartService = new ShoppingcartService(productService);
+        const productService = new ProductService();
+        const shoppingcartService = new ShoppingcartService(productService);
         const catalogService = new CatalogService(productService);
 
-        const catalogView = new CatalogView()
+        const catalogView = new CatalogView();
         this.catalogController = new CatalogController(catalogService, catalogView);
 
-
-        let shoppingCartView = new ShoppingCartView(null);
-        this.shoppingCartController = new ShoppingCartController(shoppingcartService, shoppingCartView);
+        const shoppingCartView = new ShoppingCartView(null);
+        this.shoppingCartController = new ShoppingCartController(shoppingcartService, shoppingCartView, this.header);
         shoppingCartView.shoppingCartController = this.shoppingCartController;
 
-        let productView = new ProductView();
+        const productView = new ProductView();
         this.productController = new ProductController(productService, productView);
 
         this.pageNotFound = new PageNotFound();

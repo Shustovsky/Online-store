@@ -1,5 +1,5 @@
 import { Product } from '../../model/product';
-import {ProductService} from "../product/productService";
+import { ProductService } from '../product/productService';
 
 export class CatalogService {
     productService: ProductService;

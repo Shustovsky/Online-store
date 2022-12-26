@@ -1,6 +1,6 @@
-import {Product} from '../../model/product';
-import {ShoppingCart} from '../../model/shoppingCart';
-import {ShoppingCartController} from "./shoppingCartController";
+import { Product } from '../../model/product';
+import { ShoppingCart } from '../../model/shoppingCart';
+import { ShoppingCartController } from './shoppingCartController';
 
 export class ShoppingCartView {
     shoppingCartController: ShoppingCartController | null;
@@ -37,15 +37,15 @@ export class ShoppingCartView {
     }
 
     public onShoppingCardChange(shoppingCart: ShoppingCart) {
-        this.removeElementsByClass("shoppingcart__product");
-        const shoppingcartContents = document.querySelector('.shoppingcart__contents')
+        this.removeElementsByClass('shoppingcart__product');
+        const shoppingcartContents = document.querySelector('.shoppingcart__contents');
         shoppingCart.products.forEach((value, index) => {
             const contents = this.createProduct(value.product, value.count, index + 1);
             shoppingcartContents?.append(contents);
         });
 
-        const container = document.querySelector('.shoppingcart-container')
-        this.removeElementsByClass("shoppingcart__wrapper-summary");
+        const container = document.querySelector('.shoppingcart-container');
+        this.removeElementsByClass('shoppingcart__wrapper-summary');
         const summaryWrapper = this.createSummaryWrapper(shoppingCart);
         container?.append(summaryWrapper);
     }
@@ -265,7 +265,7 @@ export class ShoppingCartView {
         const addProduct = document.createElement('button'); //todo add event listener on click
         addProduct.className = 'add-product';
         addProduct.textContent = '+';
-        addProduct.addEventListener("click", (ev) => this.shoppingCartController?.addItemToShoppingCart(id))
+        addProduct.addEventListener('click', () => this.shoppingCartController?.addItemToShoppingCart(id));
         productAddWrapper.append(addProduct);
 
         const displayQuantity = document.createElement('div');
@@ -276,6 +276,7 @@ export class ShoppingCartView {
         const deleteProduct = document.createElement('button'); //todo add event listener on click
         deleteProduct.className = 'delete-product';
         deleteProduct.textContent = '-';
+        deleteProduct.addEventListener('click', () => this.shoppingCartController?.deleteItemFromShoppingCart(id));
         productAddWrapper.append(deleteProduct);
 
         return productAddWrapper;

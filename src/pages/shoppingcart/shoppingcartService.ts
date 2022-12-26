@@ -1,5 +1,5 @@
-import {Item, ShoppingCart} from '../../model/shoppingCart';
-import { ProductService } from "../product/productService";
+import { Item, ShoppingCart } from '../../model/shoppingCart';
+import { ProductService } from '../product/productService';
 
 export class ShoppingcartService {
     private productService: ProductService;
@@ -41,17 +41,34 @@ export class ShoppingcartService {
         return shoppingCart;
     }
 
+    public deleteItem(id: number): ShoppingCart {
+        const product = this.productService.getProduct(id);
+        if (!product) {
+            throw new Error(`Product ${id} not found.`);
+        }
+
+        const shoppingCart = this.getShoppingCart();
+        const item = this.getShoppingCartItem(shoppingCart, id);
+
+        if (item && item.count > 0) {
+            item.count -= 1;
+            shoppingCart.totalPrice -= product.price;
+            shoppingCart.productsCount -= 1;
+            this.saveShoppingCart(shoppingCart);
+        }
+        return shoppingCart;
+    }
+
     public saveShoppingCart(shoppingCart: ShoppingCart): void {
-        let shoppingCartJson = JSON.stringify(shoppingCart);
+        const shoppingCartJson = JSON.stringify(shoppingCart);
         localStorage.setItem('shoppingCart', shoppingCartJson);
     }
 
     private getShoppingCartItem(shoppingCart: ShoppingCart, productId: number): Item | undefined {
-        return shoppingCart.products.find(productWrapper => productWrapper.product.id === productId)
+        return shoppingCart.products.find((productWrapper) => productWrapper.product.id === productId);
     }
 
     private addShoppingCartItem(shoppingCart: ShoppingCart, item: Item) {
         shoppingCart.products.push(item);
     }
 }
-
