@@ -54,6 +54,10 @@ export class ShoppingcartService {
             item.count -= 1;
             shoppingCart.totalPrice -= product.price;
             shoppingCart.productsCount -= 1;
+            if (item.count === 0) {
+                const itemIndex = shoppingCart.products.indexOf(item);
+                shoppingCart.products.splice(itemIndex, 1);
+            }
             this.saveShoppingCart(shoppingCart);
         }
         return shoppingCart;
