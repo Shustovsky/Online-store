@@ -1,8 +1,15 @@
 import { Product } from '../../model/product';
-import {CatalogController} from "./catalogController";
+import { CatalogController } from './catalogController';
 
 export class CatalogView {
     catalogController: CatalogController | null;
+
+    allFiltersObj: { [key: string]: (string | number)[] } = {
+        category: [],
+        brand: [],
+        price: [],
+        stock: [],
+    };
 
     constructor(catalogController: CatalogController | null) {
         this.catalogController = catalogController;
@@ -40,8 +47,13 @@ export class CatalogView {
 
         products.forEach((item) => productsItems.append(this.createItems(item)));
 
+        this.checkboxFilterWork('category');
+        this.checkboxFilterWork('brand');
+
         this.detailsBtnFunc();
         this.changeView();
+
+        this.hideShowItems(products);
     }
 
     createFilters(products: Product[]): HTMLDivElement {
@@ -62,8 +74,8 @@ export class CatalogView {
         filters.append(categoryFilter);
         filters.append(brandFilter);
 
-        const priceFilter = this.createRangeFilter('price');
-        const stockFilter = this.createRangeFilter('stock');
+        const priceFilter = this.createRangeFilter('price', products);
+        const stockFilter = this.createRangeFilter('stock', products);
         filters.append(priceFilter);
         filters.append(stockFilter);
 
@@ -109,6 +121,8 @@ export class CatalogView {
             }
         }
         allCategory.forEach((item) => {
+            this.allFiltersObj[name].push(item);
+
             const div = document.createElement('div');
             filtersCheckbox.append(div);
 
@@ -116,6 +130,7 @@ export class CatalogView {
             input.type = 'checkbox';
             input.id = `${item}`;
             input.name = `${item}`;
+            input.checked = true;
             div.append(input);
 
             const label = document.createElement('label');
@@ -127,7 +142,7 @@ export class CatalogView {
         return filtersCategory;
     }
 
-    createRangeFilter(name: string): HTMLDivElement {
+    createRangeFilter(name: string, products: Product[]): HTMLDivElement {
         const filtersCategory = document.createElement('div');
         filtersCategory.className = `filters__${name}`;
 
@@ -146,26 +161,44 @@ export class CatalogView {
         const div = document.createElement('div');
         filtersRange.append(div);
 
+        let maxValue: string | number | string[] = 0;
+        let minValue: string | number | string[] = 1000;
+        products.forEach((item) => {
+            if (maxValue < item[name as keyof Product]) {
+                maxValue = item[name as keyof Product];
+            }
+            if (minValue > item[name as keyof Product]) {
+                minValue = item[name as keyof Product];
+            }
+        });
+
         const inputLower = document.createElement('input');
         inputLower.className = 'input-range lower';
         inputLower.type = 'range';
-        inputLower.min = '1';
-        inputLower.max = '100';
+        inputLower.min = `${minValue}`;
+        inputLower.max = `${maxValue}`;
         inputLower.value = inputLower.min;
         div.append(inputLower);
 
         const inputUpper = document.createElement('input');
         inputUpper.className = 'input-range upper';
         inputUpper.type = 'range';
-        inputUpper.min = '1';
-        inputUpper.max = '100';
+        inputUpper.min = `${minValue}`;
+        inputUpper.max = `${maxValue}`;
         inputUpper.value = inputUpper.max;
         div.append(inputUpper);
+
+        const filter = this.allFiltersObj;
+        filter[name][0] = minValue;
+        filter[name][1] = maxValue;
 
         return filtersCategory;
     }
 
     setValueRangeFilter(div: HTMLDivElement): void {
+        const nameFilter = div.className.split('__')[1];
+        const filter = this.allFiltersObj;
+
         const inputLower = div.querySelector('.lower') as HTMLInputElement;
         const inputUpper = div.querySelector('.upper') as HTMLInputElement;
         const filterValue = div.querySelector('.filters-range_value') as HTMLDivElement;
@@ -175,13 +208,25 @@ export class CatalogView {
             const lowerVal = parseInt(inputLower.value);
             const upperVal = parseInt(inputUpper.value);
 
-            filterValue.innerHTML = lowerVal < upperVal ? `${lowerVal} - ${upperVal}` : `${upperVal} - ${lowerVal}`;
+            if (lowerVal < upperVal) {
+                filterValue.innerHTML = `${lowerVal} - ${upperVal}`;
+                filter[nameFilter][0] = lowerVal;
+            } else {
+                filterValue.innerHTML = `${upperVal} - ${lowerVal}`;
+                filter[nameFilter][1] = lowerVal;
+            }
         };
         inputUpper.oninput = (): void => {
             const lowerVal = parseInt(inputLower.value);
             const upperVal = parseInt(inputUpper.value);
 
-            filterValue.innerHTML = lowerVal < upperVal ? `${lowerVal} - ${upperVal}` : `${upperVal} - ${lowerVal}`;
+            if (lowerVal < upperVal) {
+                filterValue.innerHTML = `${lowerVal} - ${upperVal}`;
+                filter[nameFilter][1] = upperVal;
+            } else {
+                filterValue.innerHTML = `${upperVal} - ${lowerVal}`;
+                filter[nameFilter][0] = upperVal;
+            }
         };
     }
 
@@ -349,7 +394,6 @@ export class CatalogView {
         const addButton = document.createElement('button');
         addButton.className = 'item__buttons_btn add_btn';
         addButton.innerHTML = 'ADD TO CART';
-        addButton.addEventListener("click", (ev) => this.catalogController?.addItemToShoppingCart(product.id))
         itemButtons.append(addButton);
 
         const detailsButton = document.createElement('button');
@@ -385,7 +429,55 @@ export class CatalogView {
             const btn = item.querySelector('.details_btn') as HTMLButtonElement;
             btn.addEventListener('click', () => {
                 const itemID = item.getAttribute('data-id');
-                window.location.href = `?id=${itemID}#product`;
+                window.location.href = `#product?id=${itemID}`;
+            });
+        });
+    }
+
+    checkboxFilterWork(nameFilter: string): void {
+        const allLabels = document.querySelectorAll(`.filters__${nameFilter} input`);
+        const filter = this.allFiltersObj;
+        allLabels.forEach((item): void => {
+            item.addEventListener('change', function (this: HTMLInputElement): void {
+                console.log(this);
+                if (this.checked) {
+                    filter[nameFilter].push(this.id);
+                } else {
+                    filter[nameFilter] = filter[nameFilter].filter((e) => e !== this.id);
+                }
+                console.log(filter);
+            });
+        });
+    }
+
+    hideShowItems(products: Product[]) {
+        const allInputs = document.querySelectorAll('.filters input');
+        const productsItems = document.querySelector('.products__items') as HTMLDivElement;
+
+        allInputs.forEach((input) => {
+            input.addEventListener('change', () => {
+                productsItems.innerHTML = '';
+                products.forEach((item) => {
+                    this.allFiltersObj.category.forEach((category) => {
+                        if (item.category === category) {
+                            this.allFiltersObj.brand.forEach((brand) => {
+                                if (item.brand === brand) {
+                                    if (
+                                        item.price >= this.allFiltersObj.price[0] &&
+                                        item.price <= this.allFiltersObj.price[1]
+                                    ) {
+                                        if (
+                                            item.stock >= this.allFiltersObj.stock[0] &&
+                                            item.stock <= this.allFiltersObj.stock[1]
+                                        ) {
+                                            productsItems.append(this.createItems(item));
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
             });
         });
     }
