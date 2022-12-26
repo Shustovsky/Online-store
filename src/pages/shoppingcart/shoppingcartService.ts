@@ -29,15 +29,21 @@ export class ShoppingcartService {
         const item = this.getShoppingCartItem(shoppingCart, id);
 
         if (item) {
-            item.count += 1;
+            if (item.count < product.stock) {
+                item.count += 1;
+                shoppingCart.totalPrice += product.price;
+                shoppingCart.productsCount += 1;
+                this.saveShoppingCart(shoppingCart);
+            }
         } else {
-            const newItem = new Item(product, 1);
-            this.addShoppingCartItem(shoppingCart, newItem);
+            if (product.stock > 0) {
+                const newItem = new Item(product, 1);
+                this.addShoppingCartItem(shoppingCart, newItem);
+                shoppingCart.totalPrice += product.price;
+                shoppingCart.productsCount += 1;
+                this.saveShoppingCart(shoppingCart);
+            }
         }
-        shoppingCart.totalPrice += product.price;
-        shoppingCart.productsCount += 1;
-
-        this.saveShoppingCart(shoppingCart);
         return shoppingCart;
     }
 
