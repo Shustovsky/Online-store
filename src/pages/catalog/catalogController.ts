@@ -9,7 +9,12 @@ export class CatalogController {
     catalogView: CatalogView;
     headerView: HeaderView;
 
-    constructor(catalogService: CatalogService, shoppingcartService: ShoppingcartService, catalogView: CatalogView, headerView: HeaderView) {
+    constructor(
+        catalogService: CatalogService,
+        shoppingcartService: ShoppingcartService,
+        catalogView: CatalogView,
+        headerView: HeaderView
+    ) {
         this.catalogService = catalogService;
         this.shoppingcartService = shoppingcartService;
         this.catalogView = catalogView;
