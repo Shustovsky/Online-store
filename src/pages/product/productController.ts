@@ -2,10 +2,15 @@ import { ProductView } from './productView';
 import { ProductService } from './productService';
 
 export class ProductController {
-    ProductService: ProductService = new ProductService();
-    productView: ProductView = new ProductView();
+    productService: ProductService;
+    productView: ProductView;
+
+    constructor(productService: ProductService, productView: ProductView) {
+        this.productService = productService;
+        this.productView = productView;
+    }
 
     drawPage(id: number) {
-        this.ProductService.fetchProduct(id, (product) => this.productView.renderProduct(product));
+        this.productService.fetchProduct(id, (product) => this.productView.renderProduct(product));
     }
 }

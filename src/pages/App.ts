@@ -5,6 +5,12 @@ import { PageNotFound } from './components/pageNotFound';
 import { ShoppingCartController } from './shoppingcart/shoppingCartController';
 import { ProductController } from './product/productController';
 import { HeaderController } from './components/headerController';
+import { CatalogService } from './catalog/catalogService';
+import { CatalogView } from './catalog/catalogView';
+import { ShoppingcartService } from './shoppingcart/shoppingcartService';
+import { ProductService } from './product/productService';
+import { ShoppingCartView } from './shoppingcart/shoppingCartView';
+import { ProductView } from './product/productView';
 
 export const enum Categories {
     CATALOG_PATH = 'catalog',
@@ -24,11 +30,24 @@ export class App {
     constructor() {
         this.header = new HeaderView();
         this.footer = new Footer();
-        this.catalogController = new CatalogController();
+
+        const productService = new ProductService();
+        const shoppingcartService = new ShoppingcartService(productService);
+        const catalogService = new CatalogService(productService);
+
+        const catalogView = new CatalogView(null);
+        this.catalogController = new CatalogController(catalogService, shoppingcartService, catalogView, this.header);
+        catalogView.catalogController = this.catalogController;
+
+        const shoppingCartView = new ShoppingCartView(null);
+        this.shoppingCartController = new ShoppingCartController(shoppingcartService, shoppingCartView, this.header);
+        shoppingCartView.shoppingCartController = this.shoppingCartController;
+
+        const productView = new ProductView();
+        this.productController = new ProductController(productService, productView);
+
         this.pageNotFound = new PageNotFound();
-        this.shoppingCartController = new ShoppingCartController();
-        this.productController = new ProductController();
-        this.headerController = new HeaderController();
+        this.headerController = new HeaderController(this.header, shoppingcartService);
     }
 
     renderNewPage(url: string): void {

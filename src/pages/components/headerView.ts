@@ -1,7 +1,7 @@
 import { ShoppingCart } from '../../model/shoppingCart';
 
 export class HeaderView {
-    createHeader(shoppingCart: ShoppingCart): void {
+    public createHeader(shoppingCart: ShoppingCart): void {
         const body = document.body;
         const header = document.createElement('header');
         header.className = 'header';
@@ -24,7 +24,20 @@ export class HeaderView {
         const cartBlock = this.createCart(shoppingCart);
         headerContainer.append(cartBlock);
     }
-    createLogo(): HTMLDivElement {
+
+    public onShoppingCardChange(shoppingCart: ShoppingCart) {
+        const priceNumb = document.querySelector('.price_numb');
+        if (priceNumb) {
+            priceNumb.innerHTML = `€ ${shoppingCart.totalPrice}`;
+        }
+
+        const cartCount = document.querySelector('.cart_count');
+        if (cartCount) {
+            cartCount.innerHTML = `${shoppingCart.productsCount}`;
+        }
+    }
+
+    private createLogo(): HTMLDivElement {
         const logo = document.createElement('div');
         logo.className = 'logo';
 
@@ -46,7 +59,7 @@ export class HeaderView {
         return logo;
     }
 
-    createPrice(shoppingCart: ShoppingCart): HTMLDivElement {
+    private createPrice(shoppingCart: ShoppingCart): HTMLDivElement {
         const price = document.createElement('div');
         price.className = 'price';
 
@@ -63,7 +76,7 @@ export class HeaderView {
         return price;
     }
 
-    createCart(shoppingCart: ShoppingCart): HTMLDivElement {
+    private createCart(shoppingCart: ShoppingCart): HTMLDivElement {
         const cart = document.createElement('div');
         cart.className = 'cart';
         cart.onclick = function () {

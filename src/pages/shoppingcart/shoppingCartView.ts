@@ -1,7 +1,14 @@
 import { Product } from '../../model/product';
 import { ShoppingCart } from '../../model/shoppingCart';
+import { ShoppingCartController } from './shoppingCartController';
 
 export class ShoppingCartView {
+    shoppingCartController: ShoppingCartController | null;
+
+    constructor(shoppingCartController: ShoppingCartController | null) {
+        this.shoppingCartController = shoppingCartController;
+    }
+
     public renderShoppingCart(shoppingCart: ShoppingCart): void {
         const header = document.querySelector('.header') as HTMLElement;
 
@@ -10,7 +17,7 @@ export class ShoppingCartView {
         header.after(mainElement);
 
         const container = document.createElement('div');
-        container.className = 'container';
+        container.className = 'shoppingcart-container';
         mainElement.append(container);
 
         const shoppingcartContents = document.createElement('div');
@@ -27,6 +34,27 @@ export class ShoppingCartView {
 
         const summaryWrapper = this.createSummaryWrapper(shoppingCart);
         container.append(summaryWrapper);
+    }
+
+    public onShoppingCardChange(shoppingCart: ShoppingCart) {
+        this.removeElementsByClass('shoppingcart__product');
+        const shoppingcartContents = document.querySelector('.shoppingcart__contents');
+        shoppingCart.products.forEach((value, index) => {
+            const contents = this.createProduct(value.product, value.count, index + 1);
+            shoppingcartContents?.append(contents);
+        });
+
+        const container = document.querySelector('.shoppingcart-container');
+        this.removeElementsByClass('shoppingcart__wrapper-summary');
+        const summaryWrapper = this.createSummaryWrapper(shoppingCart);
+        container?.append(summaryWrapper);
+    }
+
+    private removeElementsByClass(className: string) {
+        const elements = document.getElementsByClassName(className);
+        while (elements.length > 0) {
+            elements[0]?.parentNode?.removeChild(elements[0]);
+        }
     }
 
     private createProduct(product: Product, productsCount: number, productSequenceNumber: number): HTMLDivElement {
@@ -85,6 +113,9 @@ export class ShoppingCartView {
         const shoppingcartBtnNext = document.createElement('button'); //todo add listener on click
         shoppingcartBtnNext.className = 'shoppingcart__btn-next-page';
         shoppingcartBtnNext.textContent = '>';
+        shoppingcartBtnNext.addEventListener('click', () => {
+            //todo
+        });
         shoppingcartPaginationPage.append(shoppingcartBtnNext);
 
         return shoppingcartPaginationPage;
@@ -199,7 +230,7 @@ export class ShoppingCartView {
         const productStockWrapper = this.createProductStockWrapper(product);
         changeProductQuantity.append(productStockWrapper);
 
-        const productAddWrapper = this.createProductAddWrapper(productsCount);
+        const productAddWrapper = this.createProductAddWrapper(productsCount, product.id);
         changeProductQuantity.append(productAddWrapper);
 
         const cost = document.createElement('div');
@@ -227,13 +258,14 @@ export class ShoppingCartView {
         return ProductAddWrapper;
     }
 
-    private createProductAddWrapper(productCount: number): HTMLDivElement {
+    private createProductAddWrapper(productCount: number, id: number): HTMLDivElement {
         const productAddWrapper = document.createElement('div');
         productAddWrapper.className = 'shoppingcart__wrapper-add-product';
 
         const addProduct = document.createElement('button'); //todo add event listener on click
         addProduct.className = 'add-product';
         addProduct.textContent = '+';
+        addProduct.addEventListener('click', () => this.shoppingCartController?.addItemToShoppingCart(id));
         productAddWrapper.append(addProduct);
 
         const displayQuantity = document.createElement('div');
@@ -244,6 +276,7 @@ export class ShoppingCartView {
         const deleteProduct = document.createElement('button'); //todo add event listener on click
         deleteProduct.className = 'delete-product';
         deleteProduct.textContent = '-';
+        deleteProduct.addEventListener('click', () => this.shoppingCartController?.deleteItemFromShoppingCart(id));
         productAddWrapper.append(deleteProduct);
 
         return productAddWrapper;
