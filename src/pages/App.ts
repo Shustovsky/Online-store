@@ -1,10 +1,16 @@
-import { CatalogController } from './catalog/catalogController';
-import { HeaderView } from './components/headerView';
-import { Footer } from './components/footerView';
-import { PageNotFound } from './components/pageNotFound';
-import { ShoppingCartController } from './shoppingcart/shoppingCartController';
-import { ProductController } from './product/productController';
-import { HeaderController } from './components/headerController';
+import {CatalogController} from './catalog/catalogController';
+import {HeaderView} from './components/headerView';
+import {Footer} from './components/footerView';
+import {PageNotFound} from './components/pageNotFound';
+import {ShoppingCartController} from './shoppingcart/shoppingCartController';
+import {ProductController} from './product/productController';
+import {HeaderController} from './components/headerController';
+import {CatalogService} from "./catalog/catalogService";
+import {CatalogView} from "./catalog/catalogView";
+import {ShoppingcartService} from "./shoppingcart/shoppingcartService";
+import {ProductService} from "./product/productService";
+import {ShoppingCartView} from "./shoppingcart/shoppingCartView";
+import {ProductView} from "./product/productView";
 
 export const enum Categories {
     CATALOG_PATH = 'catalog',
@@ -24,11 +30,24 @@ export class App {
     constructor() {
         this.header = new HeaderView();
         this.footer = new Footer();
-        this.catalogController = new CatalogController();
+
+        let productService = new ProductService();
+        let shoppingcartService = new ShoppingcartService(productService);
+        const catalogService = new CatalogService(productService);
+
+        const catalogView = new CatalogView()
+        this.catalogController = new CatalogController(catalogService, catalogView);
+
+
+        let shoppingCartView = new ShoppingCartView(null);
+        this.shoppingCartController = new ShoppingCartController(shoppingcartService, shoppingCartView);
+        shoppingCartView.shoppingCartController = this.shoppingCartController;
+
+        let productView = new ProductView();
+        this.productController = new ProductController(productService, productView);
+
         this.pageNotFound = new PageNotFound();
-        this.shoppingCartController = new ShoppingCartController();
-        this.productController = new ProductController();
-        this.headerController = new HeaderController();
+        this.headerController = new HeaderController(this.header, shoppingcartService);
     }
 
     renderNewPage(url: string): void {

@@ -1,8 +1,14 @@
 import { Product } from '../../model/product';
-import products from '../../assets/json/products.json';
+import {ProductService} from "../product/productService";
 
 export class CatalogService {
+    productService: ProductService;
+
+    constructor(productService: ProductService) {
+        this.productService = productService;
+    }
+
     getCatalog(): Product[] {
-        return products.products; //TODO достать из localStorage
+        return this.productService.getProducts();
     }
 }
