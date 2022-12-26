@@ -3,14 +3,19 @@ import products from '../../assets/json/products.json';
 
 export class ProductService {
     public fetchProduct(id: number, callback: (product: Product) => void): void {
-        fetch('https://dummyjson.com/products/' + id)
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error(res.statusText);
-                }
-                return res.json();
-            })
-            .then((product: Product) => callback(product));
+        const product = this.getProduct(id);
+        if (product) {
+            callback(product);
+        } else {
+            fetch('https://dummyjson.com/products/' + id)
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error(res.statusText);
+                    }
+                    return res.json();
+                })
+                .then((product: Product) => callback(product));
+        }
     }
 
     getProducts(): Product[] {
