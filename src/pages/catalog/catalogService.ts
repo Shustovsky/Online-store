@@ -9,15 +9,15 @@ export class CatalogService {
         this.productService = productService;
     }
 
-    getCatalog(): Product[] {
+    public getCatalog(): Product[] {
         return this.productService.getProducts();
     }
 
-    getFilter(): Filter {
+    public getFilter(): Filter {
         const products = this.productService.getProducts();
         const filter = new Filter();
-        const categories = new Set(products.map((val) => val.category));
-        const brandes = new Set(products.map((val) => val.brand));
+        const categories = new Set(products.map((val) => val.category.toLowerCase()));
+        const brandes = new Set(products.map((val) => val.brand.toLowerCase()));
         filter.categories = Array.from(categories);
         filter.brandes = Array.from(brandes);
 
@@ -32,7 +32,7 @@ export class CatalogService {
         return filter;
     }
 
-    changeCategoryQueryParam(param: string): void {
+    public changeCategoryQueryParam(param: string): void {
         // console.log(param)
         const searchParams = new URLSearchParams(window.location.search);
 
@@ -51,7 +51,7 @@ export class CatalogService {
         this.insertUrlParam(searchParams);
     }
 
-    changeBrandQueryParam(param: string): void {
+    public changeBrandQueryParam(param: string): void {
         // console.log(param)
         const searchParams = new URLSearchParams(window.location.search);
 
@@ -70,31 +70,31 @@ export class CatalogService {
         this.insertUrlParam(searchParams);
     }
 
-    changePriceLowerQueryParam(param: string): void {
+    public changeMinPriceQueryParam(param: string): void {
         const searchParams = new URLSearchParams(window.location.search);
         searchParams.set('minPrice', param);
         this.insertUrlParam(searchParams);
     }
 
-    changePriceUpperQueryParam(param: string): void {
+    public changeMaxPriceQueryParam(param: string): void {
         const searchParams = new URLSearchParams(window.location.search);
         searchParams.set('maxPrice', param);
         this.insertUrlParam(searchParams);
     }
 
-    changeStockLowerQueryParam(param: string): void {
+    public changeMinStockQueryParam(param: string): void {
         const searchParams = new URLSearchParams(window.location.search);
         searchParams.set('minStock', param);
         this.insertUrlParam(searchParams);
     }
 
-    changeStockUpperQueryParam(param: string): void {
+    public changeMaxStockQueryParam(param: string): void {
         const searchParams = new URLSearchParams(window.location.search);
         searchParams.set('maxStock', param);
         this.insertUrlParam(searchParams);
     }
 
-    insertUrlParam(searchParams: URLSearchParams): void {
+    private insertUrlParam(searchParams: URLSearchParams): void {
         searchParams.forEach((value, key) => {
             if (!value || key === 'id') {
                 searchParams.delete(key);
@@ -111,7 +111,7 @@ export class CatalogService {
         window.history.pushState({ path: newUrl }, '', newUrl);
     }
 
-    getFilterFromQueryParams(): Filter {
+    public getFilterFromQueryParams(): Filter {
         const searchParams = new URLSearchParams(window.location.search);
         // console.log(searchParams);
         const filter = new Filter();
@@ -124,28 +124,29 @@ export class CatalogService {
         return filter;
     }
 
-    getFilteredProduct(filter: Filter): Product[] {
+    public getFilteredProduct(filter: Filter): Product[] {
         let products = this.getCatalog();
-        products.forEach(() => {
-            if (filter.categories.length > 0) {
-                products = products.filter((item) => filter.categories.includes(item.category));
-            }
-            if (filter.brandes.length > 0) {
-                products = products.filter((item) => filter.brandes.includes(item.brand));
-            }
-            if (filter.minPrice > 0) {
-                products = products.filter((item) => (item.price >= filter.minPrice ? item : ''));
-            }
-            if (filter.maxPrice > 0) {
-                products = products.filter((item) => (item.price <= filter.maxPrice ? item : ''));
-            }
-            if (filter.minStock > 0) {
-                products = products.filter((item) => (item.stock >= filter.minStock ? item : ''));
-            }
-            if (filter.maxStock > 0) {
-                products = products.filter((item) => (item.stock <= filter.maxStock ? item : ''));
-            }
-        });
+
+        if (filter.categories.length > 0) {
+            products = products.filter((item) => filter.categories.includes(item.category.toLowerCase()));
+        }
+        if (filter.brandes.length > 0) {
+            products = products.filter((item) => filter.brandes.includes(item.brand.toLowerCase()));
+            console.log(products);
+        }
+        if (filter.minPrice > 0) {
+            products = products.filter((item) => (item.price >= filter.minPrice ? item : ''));
+        }
+        if (filter.maxPrice > 0) {
+            products = products.filter((item) => (item.price <= filter.maxPrice ? item : ''));
+        }
+        if (filter.minStock > 0) {
+            products = products.filter((item) => (item.stock >= filter.minStock ? item : ''));
+        }
+        if (filter.maxStock > 0) {
+            products = products.filter((item) => (item.stock <= filter.maxStock ? item : ''));
+        }
+
         return products;
     }
 }

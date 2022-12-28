@@ -41,7 +41,7 @@ export class CatalogView {
 
         products.forEach((item) => productsItems.append(this.createItems(item)));
 
-        this.changeView();
+        // this.changeView();
     }
 
     private createFilters(filter: Filter): HTMLDivElement {
@@ -325,6 +325,7 @@ export class CatalogView {
         sortViewGrid.className = 'sort__view_grid active';
         sortViewGrid.title = 'Grid';
         sortView.append(sortViewGrid);
+        sortViewGrid.addEventListener('click', () => this.catalogController?.changeViewItems(sortViewGrid));
 
         const div1 = document.createElement('div');
         sortViewGrid.append(div1);
@@ -339,6 +340,7 @@ export class CatalogView {
         sortViewList.className = 'sort__view_list';
         sortViewList.title = 'List';
         sortView.append(sortViewList);
+        sortViewList.addEventListener('click', () => this.catalogController?.changeViewItems(sortViewList));
 
         const div5 = document.createElement('div');
         sortViewList.append(div5);
@@ -441,7 +443,7 @@ export class CatalogView {
         const addButton = document.createElement('button');
         addButton.className = 'item__buttons_btn add_btn';
         addButton.innerHTML = 'ADD TO CART';
-        addButton.addEventListener("click", () => this.catalogController?.addItemToShoppingCart(product.id))
+        addButton.addEventListener('click', () => this.catalogController?.addItemToShoppingCart(product.id));
         itemButtons.append(addButton);
 
         const detailsButton = document.createElement('button');
@@ -457,22 +459,20 @@ export class CatalogView {
         return item;
     }
 
-    private changeView(): void {
+    public changeView(div: HTMLDivElement): void {
         const sortViewGrid = document.querySelector('.sort__view_grid') as HTMLDivElement;
         const sortViewList = document.querySelector('.sort__view_list') as HTMLDivElement;
-
-        sortViewGrid.addEventListener('click', () => {
+        if (div.classList.contains('sort__view_grid')) {
             const productItems = document.querySelector('.products__items-list') as HTMLDivElement;
             productItems.className = 'products__items';
             sortViewGrid.classList.toggle('active');
             sortViewList.classList.toggle('active');
-        });
-        sortViewList.addEventListener('click', () => {
+        } else if (div.classList.contains('sort__view_list')) {
             const productItems = document.querySelector('.products__items') as HTMLDivElement;
             productItems.className = 'products__items-list';
             sortViewList.classList.toggle('active');
             sortViewGrid.classList.toggle('active');
-        });
+        }
     }
 
     public onFilterChange(products: Product[]): void {

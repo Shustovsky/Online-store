@@ -21,56 +21,60 @@ export class CatalogController {
         this.headerView = headerView;
     }
 
-    drawPage() {
+    public drawPage() {
         const catalog = this.catalogService.getCatalog();
         const filter = this.catalogService.getFilter();
         this.catalogView.createCatalog(catalog, filter);
     }
 
-    addItemToShoppingCart(productId: number): void {
+    public addItemToShoppingCart(productId: number): void {
         const shoppingCart = this.shoppingcartService.addItem(productId);
         this.headerView.onShoppingCardChange(shoppingCart);
     }
 
-    onCategoryFilterChange(name: string) {
+    public onCategoryFilterChange(name: string) {
         this.catalogService.changeCategoryQueryParam(name);
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
     }
 
-    onBrandFilterChange(name: string) {
+    public onBrandFilterChange(name: string) {
         this.catalogService.changeBrandQueryParam(name);
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
     }
 
-    onPriceLowerFilterChange(name: string) {
-        this.catalogService.changePriceLowerQueryParam(name);
+    public onPriceLowerFilterChange(name: string) {
+        this.catalogService.changeMinPriceQueryParam(name);
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
     }
 
-    onPriceUpperFilterChange(name: string) {
-        this.catalogService.changePriceUpperQueryParam(name);
+    public onPriceUpperFilterChange(name: string) {
+        this.catalogService.changeMaxPriceQueryParam(name);
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
     }
 
-    onStockLowerFilterChange(name: string) {
-        this.catalogService.changeStockLowerQueryParam(name);
+    public onStockLowerFilterChange(name: string) {
+        this.catalogService.changeMinStockQueryParam(name);
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
     }
 
-    onStockUpperFilterChange(name: string) {
-        this.catalogService.changeStockUpperQueryParam(name);
+    public onStockUpperFilterChange(name: string) {
+        this.catalogService.changeMaxStockQueryParam(name);
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
+    }
+
+    public changeViewItems(div: HTMLDivElement) {
+        this.catalogView.changeView(div);
     }
 }
