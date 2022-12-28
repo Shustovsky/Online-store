@@ -441,6 +441,7 @@ export class CatalogView {
         const addButton = document.createElement('button');
         addButton.className = 'item__buttons_btn add_btn';
         addButton.innerHTML = 'ADD TO CART';
+        addButton.addEventListener("click", () => this.catalogController?.addItemToShoppingCart(product.id))
         itemButtons.append(addButton);
 
         const detailsButton = document.createElement('button');
