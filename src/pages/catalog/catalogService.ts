@@ -113,14 +113,36 @@ export class CatalogService {
 
     public getFilterFromQueryParams(): Filter {
         const searchParams = new URLSearchParams(window.location.search);
-        // console.log(searchParams);
         const filter = new Filter();
-        filter.categories = searchParams.get('category')?.split('|') || [];
-        filter.brandes = searchParams.get('brand')?.split('|') || [];
-        filter.minPrice = +searchParams.get('minPrice')!;
-        filter.maxPrice = +searchParams.get('maxPrice')!;
-        filter.minStock = +searchParams.get('minStock')!;
-        filter.maxStock = +searchParams.get('maxStock')!;
+
+        const categoryParam = searchParams.get('category');
+        if (categoryParam) {
+            filter.categories = categoryParam.split('|') || [];
+        }
+
+        const brandParam = searchParams.get('brand');
+        if (brandParam) {
+            filter.brandes = brandParam.split('|') || [];
+        }
+
+        const minPriceParam = searchParams.get('minPrice');
+        if (minPriceParam) {
+            filter.minPrice = +minPriceParam;
+        }
+
+        const maxPriceParam = searchParams.get('maxPrice');
+        if (maxPriceParam) {
+            filter.maxPrice = +maxPriceParam;
+        }
+
+        const minStockParam = searchParams.get('minStock');
+        if (minStockParam) {
+            filter.minStock = +minStockParam;
+        }
+        const maxStock = searchParams.get('maxStock');
+        if (maxStock) {
+            filter.maxStock = +maxStock;
+        }
         return filter;
     }
 

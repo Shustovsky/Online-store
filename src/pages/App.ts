@@ -43,8 +43,14 @@ export class App {
         this.shoppingCartController = new ShoppingCartController(shoppingcartService, shoppingCartView, this.header);
         shoppingCartView.shoppingCartController = this.shoppingCartController;
 
-        const productView = new ProductView();
-        this.productController = new ProductController(productService, productView);
+        const productView = new ProductView(null);
+        this.productController = new ProductController(
+            productService,
+            productView,
+            shoppingCartView,
+            shoppingcartService
+        );
+        productView.productController = this.productController;
 
         this.pageNotFound = new PageNotFound();
         this.headerController = new HeaderController(this.header, shoppingcartService);
