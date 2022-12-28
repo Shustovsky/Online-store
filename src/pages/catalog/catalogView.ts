@@ -40,8 +40,6 @@ export class CatalogView {
         productsWrapper.append(productsItems);
 
         products.forEach((item) => productsItems.append(this.createItems(item)));
-
-        // this.changeView();
     }
 
     private createFilters(filter: Filter): HTMLDivElement {
@@ -308,7 +306,6 @@ export class CatalogView {
 
         const sortStatValue = document.createElement('div');
         sortStatValue.className = 'sort__stat_value';
-        sortStatValue.innerHTML = '74'; //TODO поменять на переменную
         sortStat.append(sortStatValue);
 
         const sortSearch = document.createElement('input');
@@ -479,5 +476,11 @@ export class CatalogView {
         const productsItems = document.querySelector('.products__items') as HTMLDivElement;
         productsItems.innerHTML = '';
         products.forEach((item) => productsItems.append(this.createItems(item)));
+        this.changeSortStatValue(products);
+    }
+
+    public changeSortStatValue(products: Product[]): void {
+        const sortStatValue = document.querySelector('.sort__stat_value') as HTMLDivElement;
+        sortStatValue.innerHTML = `${products.length}`;
     }
 }

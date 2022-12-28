@@ -25,6 +25,7 @@ export class CatalogController {
         const catalog = this.catalogService.getCatalog();
         const filter = this.catalogService.getFilter();
         this.catalogView.createCatalog(catalog, filter);
+        this.catalogView.changeSortStatValue(catalog);
     }
 
     public addItemToShoppingCart(productId: number): void {
