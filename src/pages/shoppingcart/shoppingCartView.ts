@@ -36,6 +36,155 @@ export class ShoppingCartView {
         container.append(summaryWrapper);
     }
 
+    public createModalWrapper(): HTMLElement {
+        const container = document.querySelector('.container') as HTMLElement;
+
+        const modalWrapper = document.createElement('div');
+        modalWrapper.className = 'shoppingcart__modal-wrapper';
+        modalWrapper.addEventListener('click', (env) => {
+            if (env.target == modalWrapper) {
+                this.closeModalWrapper();
+            }
+        });
+
+        const modal = document.createElement('form');
+        modal.className = 'shoppingcart__modal';
+
+        const modalPersonalDetails = this.createModalPersonalDetails();
+        const modalCartDetails = this.createModalCartDetails();
+
+        const modalBtn = document.createElement('button');
+        modalBtn.className = 'shoppingcart__modal-btn';
+        modalBtn.type = 'submit';
+        modalBtn.textContent = 'confirm';
+
+        modal.append(modalPersonalDetails);
+        modal.append(modalCartDetails);
+        modalWrapper.append(modal);
+        container.append(modalWrapper);
+
+        return container;
+    }
+
+    public closeModalWrapper() {
+        const modalWrapper = document.querySelector('.shoppingcart__modal-wrapper') as HTMLElement;
+        modalWrapper.remove();
+    }
+
+    private createModalPersonalDetails(): HTMLElement {
+        const modalPersonalDetails = document.createElement('div');
+        modalPersonalDetails.className = 'shoppingcart__modal-personal-details';
+
+        const modalPersonalTitle = document.createElement('h2');
+        modalPersonalTitle.className = 'shoppingcart__modal-personal-title';
+        modalPersonalTitle.textContent = 'Personal details';
+
+        modalPersonalDetails.append(modalPersonalTitle);
+
+        this.createFormDetail(modalPersonalDetails, 'Name');
+        this.createFormDetail(modalPersonalDetails, 'Phone number');
+        this.createFormDetail(modalPersonalDetails, 'Delivery address');
+        this.createFormDetail(modalPersonalDetails, 'E-mail');
+
+        return modalPersonalDetails;
+    }
+
+    private createFormDetail(modalPersonalDetails: HTMLElement, placeholder: string): HTMLElement {
+        const formDetail = document.createElement('div');
+        formDetail.className = 'shoppingcart__form-detail';
+
+        const formItem = document.createElement('input');
+        formItem.className = 'shoppingcart__form-item';
+        formItem.type = 'text';
+        formItem.placeholder = placeholder;
+
+        formDetail.append(formItem);
+        modalPersonalDetails.append(formDetail);
+
+        return modalPersonalDetails;
+    }
+
+    private createModalCartDetails(): HTMLElement {
+        const modalCartDetails = document.createElement('div');
+        modalCartDetails.className = 'shoppingcart__modal-cart-details';
+
+        const modalCartTitle = document.createElement('h2');
+        modalCartTitle.className = 'shoppingcart__modal-cart-title';
+        modalCartTitle.textContent = 'Credit cart details';
+
+        const modalCartWrapper = this.createModalCartWrapper();
+
+        modalCartDetails.append(modalCartTitle);
+        modalCartDetails.append(modalCartWrapper);
+
+        return modalCartDetails;
+    }
+
+    private createModalCartWrapper(): HTMLElement {
+        const modalCartWrapper = document.createElement('div');
+        modalCartWrapper.className = 'shoppingcart__modal-cart-wrapper';
+
+        const cartWrapper = this.createCartWrapper();
+
+        const otherData = this.createOtherData();
+
+        modalCartWrapper.append(cartWrapper);
+        modalCartWrapper.append(otherData);
+
+        return modalCartWrapper;
+    }
+
+    private createCartWrapper(): HTMLElement {
+        const cartWrapper = document.createElement('div');
+        cartWrapper.className = 'shoppingcart__cart-wrapper';
+
+        const cartImg = document.createElement('img');
+        cartImg.className = 'shoppingcart__cart-img';
+        cartImg.alt = 'logo of payment system';
+        cartImg.src =
+            'https://i.guim.co.uk/img/media/b73cc57cb1d46ae742efd06b6c58805e8600d482/16_0_2443_1466/master/2443.jpg?width=700&quality=85&auto=format&fit=max&s=fb1dca6cdd4589cd9ef2fc941935de71';
+
+        const cartNumber = document.createElement('input');
+        cartNumber.className = 'shoppingcart__cart-number';
+        cartNumber.type = 'text';
+        cartNumber.placeholder = 'Cart number';
+
+        cartWrapper.append(cartImg);
+        cartWrapper.append(cartNumber);
+
+        return cartWrapper;
+    }
+
+    private createOtherData(): HTMLElement {
+        const otherData = document.createElement('div');
+        otherData.className = 'shoppingcart__other-data';
+
+        const validData = document.createElement('div');
+        validData.className = 'shoppingcart__valid-data';
+        validData.textContent = 'VALID:';
+
+        const validCvv = document.createElement('div');
+        validCvv.className = 'shoppingcart__valid-cvv';
+        validCvv.textContent = 'CVV:';
+
+        const validThru = document.createElement('input');
+        validThru.className = 'shoppingcart__valid-thru';
+        validThru.type = 'text';
+        validThru.placeholder = 'Valid Thru';
+
+        const validCode = document.createElement('input');
+        validCode.className = 'shoppingcart__valid-code';
+        validCode.type = 'text';
+        validCode.placeholder = 'Code';
+
+        validData.append(validThru);
+        validCvv.append(validCode);
+        otherData.append(validData);
+        otherData.append(validCvv);
+
+        return otherData;
+    }
+
     public onShoppingCardChange(shoppingCart: ShoppingCart) {
         this.removeElementsByClass('shoppingcart__product');
         const shoppingcartContents = document.querySelector('.shoppingcart__contents');
@@ -262,7 +411,7 @@ export class ShoppingCartView {
         const productAddWrapper = document.createElement('div');
         productAddWrapper.className = 'shoppingcart__wrapper-add-product';
 
-        const addProduct = document.createElement('button'); //todo add event listener on click
+        const addProduct = document.createElement('button');
         addProduct.className = 'add-product';
         addProduct.textContent = '+';
         addProduct.addEventListener('click', () => this.shoppingCartController?.addItemToShoppingCart(id));
@@ -273,7 +422,7 @@ export class ShoppingCartView {
         displayQuantity.textContent = productCount.toString();
         productAddWrapper.append(displayQuantity);
 
-        const deleteProduct = document.createElement('button'); //todo add event listener on click
+        const deleteProduct = document.createElement('button');
         deleteProduct.className = 'delete-product';
         deleteProduct.textContent = '-';
         deleteProduct.addEventListener('click', () => this.shoppingCartController?.deleteItemFromShoppingCart(id));
@@ -321,6 +470,9 @@ export class ShoppingCartView {
         const btnBuyNow = document.createElement('button');
         btnBuyNow.className = 'btn-buy-now';
         btnBuyNow.textContent = 'buy now';
+        btnBuyNow.addEventListener('click', () => {
+            this.createModalWrapper();
+        });
         displayCart.append(btnBuyNow);
 
         return displayCart;
@@ -354,7 +506,7 @@ export class ShoppingCartView {
 
         const totalCost = document.createElement('div');
         totalCost.className = 'shoppingcart__total-cost';
-        totalCost.textContent = `€${shoppingCart.totalPrice}`; // todo add total
+        totalCost.textContent = `€${shoppingCart.totalPrice}`;
         totalWrapper.append(totalCost);
 
         return totalWrapper;

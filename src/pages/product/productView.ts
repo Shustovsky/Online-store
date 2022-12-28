@@ -1,6 +1,13 @@
 import { Product } from '../../model/product';
+import { ProductController } from './productController';
 
 export class ProductView {
+    productController: ProductController | null;
+
+    constructor(productController: ProductController | null) {
+        this.productController = productController;
+    }
+
     public renderProduct(product: Product): void {
         const header = document.querySelector('.header') as HTMLElement;
 
@@ -21,6 +28,11 @@ export class ProductView {
         productWrapperAbout.className = 'product__wrapper-about';
         this.createProductWrapperAbout(product, productWrapperAbout);
         container.append(productWrapperAbout);
+    }
+
+    public removeProduct(): void {
+        const mainElement = document.querySelector('.product') as HTMLElement;
+        mainElement.remove();
     }
 
     private createProductLinkNavigation(product: Product, linkNavigation: HTMLDivElement): void {
@@ -160,7 +172,7 @@ export class ProductView {
         productDetails.append(productDetailsItem);
     }
 
-    private createProductWrapperPriceElements(product: Product, productWrapperPrice: HTMLDivElement): void {
+    public createProductWrapperPriceElements(product: Product, productWrapperPrice: HTMLDivElement): void {
         const productPrice = document.createElement('div');
         productPrice.className = 'product__price';
         productPrice.textContent = `€${product.price}`;
@@ -174,6 +186,7 @@ export class ProductView {
         productBtnBuy.className = 'product__btn';
         productBtnBuy.id = 'btn-buy';
         productBtnBuy.textContent = 'buy now';
+        productBtnBuy.addEventListener('click', () => this.productController?.goToBuyNow());
 
         productWrapperPrice.append(productPrice);
         productWrapperPrice.append(productBtn);

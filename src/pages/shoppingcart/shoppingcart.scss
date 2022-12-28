@@ -1,5 +1,8 @@
 .shoppingcart {
   .shoppingcart-container {
+    margin: 0 auto;
+    max-width: 1260px;
+    position: relative;
     display: flex;
     gap: 10px;
   }
@@ -136,5 +139,141 @@
   &__display-total-cost {
     display: flex;
     gap: 10px;
+  }
+
+
+  //modal
+
+  &__modal-wrapper {
+    z-index: 99;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(13,13,13,.8);
+  }
+
+  &__modal {
+    z-index: 99;
+    position: absolute;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-direction: column;
+    width: 40%;
+    height: 80%;
+    background-color: #181a1c;
+    border: 1px solid orange;
+    border-radius: 0.5rem;
+  }
+
+  &__modal-personal-details {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__modal-personal-title,
+  &__modal-cart-title {
+    margin-top: 10px;
+    color: orange;
+  }
+
+  &__modal-cart-details {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  &__modal-cart-wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  &__cart-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 3% auto;
+  }
+
+  &__form-item {
+    width: 100%;
+    border: 1px solid orange;
+    color: orange;
+    border-radius: 2rem;
+    padding: 0.4rem;
+    outline: none;
+    font-size: 90%;
+    text-align: center;
+    margin: 2% auto;
+  }
+
+  &__cart-img {
+    display: inline-block;
+    background-color: #fff;
+    width: 10%;
+    border-radius: 0.3rem;
+    padding: 0.3rem;
+  }
+
+  &__modal-cart-wrapper {
+    border: 1px solid orange;
+    margin: 0 auto;
+    border-radius: 0.5rem;
+    background: rgb(0,9,36);
+    background: linear-gradient(90deg,rgb(0,9,36) 6%,rgb(9,9,121) 34%,rgb(0,212,255) 100%);
+    width: 55%;
+    height: 6rem;
+  }
+
+  &__cart-number {
+    border: 1px solid orange;
+    border-radius: 0.3rem;
+    outline: none;
+    text-align: center;
+    margin-left: 2%;
+    font-size: 90%;
+    color: #000;
+  }
+
+  &__other-data {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  &__valid-data,
+  &__valid-cvv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 90%;
+    color: orange;
+  }
+
+  &__valid-code,
+  &__valid-thru {
+    width: 60%;
+    height: 1rem;
+    background: rgb(233,233,202);
+    border: 1px solid orange;
+    border-radius: 0.3rem;
+    outline: none;
+    text-align: center;
+    margin-left: 2%;
+    font-size: 90%;
+    color: #000;
+    font-weight: 700;
   }
 }
