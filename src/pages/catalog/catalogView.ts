@@ -1,5 +1,6 @@
 import { Product } from '../../model/product';
-import {CatalogController} from "./catalogController";
+import { CatalogController } from './catalogController';
+import { Filter } from '../../model/Filter';
 
 export class CatalogView {
     catalogController: CatalogController | null;
@@ -8,7 +9,7 @@ export class CatalogView {
         this.catalogController = catalogController;
     }
 
-    createCatalog(products: Product[]): void {
+    public createCatalog(products: Product[], filter: Filter): void {
         const header = document.querySelector('.header') as HTMLElement;
 
         const main = document.createElement('main');
@@ -22,7 +23,7 @@ export class CatalogView {
         mainContainer.className = 'main_container';
         container.append(mainContainer);
 
-        const filters = this.createFilters(products);
+        const filters = this.createFilters(filter);
         mainContainer.append(filters);
 
         const productsWrapper = document.createElement('div');
@@ -40,11 +41,10 @@ export class CatalogView {
 
         products.forEach((item) => productsItems.append(this.createItems(item)));
 
-        this.detailsBtnFunc();
-        this.changeView();
+        // this.changeView();
     }
 
-    createFilters(products: Product[]): HTMLDivElement {
+    private createFilters(filter: Filter): HTMLDivElement {
         const filters = document.createElement('div');
         filters.className = 'filters';
 
@@ -57,23 +57,20 @@ export class CatalogView {
         filtersButtons.append(btnReset);
         filtersButtons.append(btnCopy);
 
-        const categoryFilter = this.createCheckboxFilter('category', products);
-        const brandFilter = this.createCheckboxFilter('brand', products);
+        const categoryFilter = this.createCategoryFilter(filter);
+        const brandFilter = this.createBrandFilter(filter);
         filters.append(categoryFilter);
         filters.append(brandFilter);
 
-        const priceFilter = this.createRangeFilter('price');
-        const stockFilter = this.createRangeFilter('stock');
+        const priceFilter = this.createPriceFilter(filter);
+        const stockFilter = this.createStockFilter(filter);
         filters.append(priceFilter);
         filters.append(stockFilter);
-
-        this.setValueRangeFilter(priceFilter);
-        this.setValueRangeFilter(stockFilter);
 
         return filters;
     }
 
-    createBtn(name: string): HTMLButtonElement {
+    private createBtn(name: string): HTMLButtonElement {
         const btn = document.createElement('button');
         btn.id = `btn_${name}`;
         btn.className = 'filters__buttons_btn';
@@ -82,33 +79,19 @@ export class CatalogView {
         return btn;
     }
 
-    createCheckboxFilter(name: string, products: Product[]): HTMLDivElement {
+    private createCategoryFilter(filter: Filter): HTMLDivElement {
         const filtersCategory = document.createElement('div');
-        filtersCategory.className = `filters__${name}`;
+        filtersCategory.className = `filters__category`;
 
         const filtersCheckbox = document.createElement('fieldset');
         filtersCheckbox.className = 'filters-checkbox';
         filtersCategory.append(filtersCheckbox);
 
         const legend = document.createElement('legend');
-        legend.innerHTML = `${name}`;
+        legend.innerHTML = 'category';
         filtersCheckbox.append(legend);
 
-        const allCategory: string[] = [];
-
-        for (const item of products) {
-            //захаркодил т.к. let categoryItem = item[name]; по каким-то причинам не работает
-            let categoryItem = '';
-            if (name === 'category') {
-                categoryItem = item.category;
-            } else if (name === 'brand') {
-                categoryItem = item.brand;
-            }
-            if (!allCategory.includes(categoryItem)) {
-                allCategory.push(categoryItem);
-            }
-        }
-        allCategory.forEach((item) => {
+        filter.categories.forEach((item) => {
             const div = document.createElement('div');
             filtersCheckbox.append(div);
 
@@ -117,6 +100,7 @@ export class CatalogView {
             input.id = `${item}`;
             input.name = `${item}`;
             div.append(input);
+            input.addEventListener('click', () => this.catalogController?.onCategoryFilterChange(item));
 
             const label = document.createElement('label');
             label.setAttribute('for', `${item}`);
@@ -127,16 +111,48 @@ export class CatalogView {
         return filtersCategory;
     }
 
-    createRangeFilter(name: string): HTMLDivElement {
+    private createBrandFilter(filter: Filter): HTMLDivElement {
         const filtersCategory = document.createElement('div');
-        filtersCategory.className = `filters__${name}`;
+        filtersCategory.className = `filters__brand`;
+
+        const filtersCheckbox = document.createElement('fieldset');
+        filtersCheckbox.className = 'filters-checkbox';
+        filtersCategory.append(filtersCheckbox);
+
+        const legend = document.createElement('legend');
+        legend.innerHTML = 'brand';
+        filtersCheckbox.append(legend);
+
+        filter.brandes.forEach((item) => {
+            const div = document.createElement('div');
+            filtersCheckbox.append(div);
+
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.id = `${item}`;
+            input.name = `${item}`;
+            div.append(input);
+            input.addEventListener('click', () => this.catalogController?.onBrandFilterChange(item));
+
+            const label = document.createElement('label');
+            label.setAttribute('for', `${item}`);
+            label.innerHTML = `${item}`;
+            div.append(label);
+        });
+
+        return filtersCategory;
+    }
+
+    private createPriceFilter(filter: Filter): HTMLDivElement {
+        const filtersCategory = document.createElement('div');
+        filtersCategory.className = 'filters__price';
 
         const filtersRange = document.createElement('fieldset');
         filtersRange.className = 'filters-range';
         filtersCategory.append(filtersRange);
 
         const legend = document.createElement('legend');
-        legend.innerHTML = `${name}`;
+        legend.innerHTML = 'price';
         filtersRange.append(legend);
 
         const filterValue = document.createElement('div');
@@ -149,43 +165,119 @@ export class CatalogView {
         const inputLower = document.createElement('input');
         inputLower.className = 'input-range lower';
         inputLower.type = 'range';
-        inputLower.min = '1';
-        inputLower.max = '100';
+        inputLower.min = `${filter.minPrice}`;
+        inputLower.max = `${filter.maxPrice}`;
         inputLower.value = inputLower.min;
         div.append(inputLower);
 
         const inputUpper = document.createElement('input');
         inputUpper.className = 'input-range upper';
         inputUpper.type = 'range';
-        inputUpper.min = '1';
-        inputUpper.max = '100';
+        inputUpper.min = `${filter.minPrice}`;
+        inputUpper.max = `${filter.maxPrice}`;
         inputUpper.value = inputUpper.max;
         div.append(inputUpper);
 
-        return filtersCategory;
-    }
-
-    setValueRangeFilter(div: HTMLDivElement): void {
-        const inputLower = div.querySelector('.lower') as HTMLInputElement;
-        const inputUpper = div.querySelector('.upper') as HTMLInputElement;
-        const filterValue = div.querySelector('.filters-range_value') as HTMLDivElement;
         filterValue.innerHTML = `${inputLower.value} - ${inputUpper.value}`;
 
         inputLower.oninput = (): void => {
             const lowerVal = parseInt(inputLower.value);
             const upperVal = parseInt(inputUpper.value);
 
-            filterValue.innerHTML = lowerVal < upperVal ? `${lowerVal} - ${upperVal}` : `${upperVal} - ${lowerVal}`;
+            if (lowerVal < upperVal) {
+                filterValue.innerHTML = `${lowerVal} - ${upperVal}`;
+                this.catalogController?.onPriceLowerFilterChange(inputLower.value);
+            } else {
+                filterValue.innerHTML = `${upperVal} - ${lowerVal}`;
+                this.catalogController?.onPriceUpperFilterChange(inputLower.value);
+                this.catalogController?.onPriceLowerFilterChange(inputUpper.value);
+            }
         };
         inputUpper.oninput = (): void => {
             const lowerVal = parseInt(inputLower.value);
             const upperVal = parseInt(inputUpper.value);
 
-            filterValue.innerHTML = lowerVal < upperVal ? `${lowerVal} - ${upperVal}` : `${upperVal} - ${lowerVal}`;
+            if (lowerVal < upperVal) {
+                filterValue.innerHTML = `${lowerVal} - ${upperVal}`;
+                this.catalogController?.onPriceUpperFilterChange(inputUpper.value);
+            } else {
+                filterValue.innerHTML = `${upperVal} - ${lowerVal}`;
+                this.catalogController?.onPriceUpperFilterChange(inputLower.value);
+                this.catalogController?.onPriceLowerFilterChange(inputUpper.value);
+            }
         };
+
+        return filtersCategory;
     }
 
-    createSortBlock(): HTMLDivElement {
+    private createStockFilter(filter: Filter): HTMLDivElement {
+        const filtersCategory = document.createElement('div');
+        filtersCategory.className = 'filters__stock';
+
+        const filtersRange = document.createElement('fieldset');
+        filtersRange.className = 'filters-range';
+        filtersCategory.append(filtersRange);
+
+        const legend = document.createElement('legend');
+        legend.innerHTML = 'stock';
+        filtersRange.append(legend);
+
+        const filterValue = document.createElement('div');
+        filterValue.className = 'filters-range_value';
+        filtersRange.append(filterValue);
+
+        const div = document.createElement('div');
+        filtersRange.append(div);
+
+        const inputLower = document.createElement('input');
+        inputLower.className = 'input-range lower';
+        inputLower.type = 'range';
+        inputLower.min = `${filter.minStock}`;
+        inputLower.max = `${filter.maxStock}`;
+        inputLower.value = inputLower.min;
+        div.append(inputLower);
+
+        const inputUpper = document.createElement('input');
+        inputUpper.className = 'input-range upper';
+        inputUpper.type = 'range';
+        inputUpper.min = `${filter.minStock}`;
+        inputUpper.max = `${filter.maxStock}`;
+        inputUpper.value = inputUpper.max;
+        div.append(inputUpper);
+
+        filterValue.innerHTML = `${inputLower.value} - ${inputUpper.value}`;
+
+        inputLower.oninput = (): void => {
+            const lowerVal = parseInt(inputLower.value);
+            const upperVal = parseInt(inputUpper.value);
+
+            if (lowerVal < upperVal) {
+                filterValue.innerHTML = `${lowerVal} - ${upperVal}`;
+                this.catalogController?.onStockLowerFilterChange(inputLower.value);
+            } else {
+                filterValue.innerHTML = `${upperVal} - ${lowerVal}`;
+                this.catalogController?.onStockUpperFilterChange(inputLower.value);
+                this.catalogController?.onStockLowerFilterChange(inputUpper.value);
+            }
+        };
+        inputUpper.oninput = (): void => {
+            const lowerVal = parseInt(inputLower.value);
+            const upperVal = parseInt(inputUpper.value);
+
+            if (lowerVal < upperVal) {
+                filterValue.innerHTML = `${lowerVal} - ${upperVal}`;
+                this.catalogController?.onStockUpperFilterChange(inputUpper.value);
+            } else {
+                filterValue.innerHTML = `${upperVal} - ${lowerVal}`;
+                this.catalogController?.onStockLowerFilterChange(inputUpper.value);
+                this.catalogController?.onStockUpperFilterChange(inputLower.value);
+            }
+        };
+
+        return filtersCategory;
+    }
+
+    private createSortBlock(): HTMLDivElement {
         const productsSort = document.createElement('div');
         productsSort.className = 'products__sort';
 
@@ -233,6 +325,7 @@ export class CatalogView {
         sortViewGrid.className = 'sort__view_grid active';
         sortViewGrid.title = 'Grid';
         sortView.append(sortViewGrid);
+        sortViewGrid.addEventListener('click', () => this.catalogController?.changeViewItems(sortViewGrid));
 
         const div1 = document.createElement('div');
         sortViewGrid.append(div1);
@@ -247,6 +340,7 @@ export class CatalogView {
         sortViewList.className = 'sort__view_list';
         sortViewList.title = 'List';
         sortView.append(sortViewList);
+        sortViewList.addEventListener('click', () => this.catalogController?.changeViewItems(sortViewList));
 
         const div5 = document.createElement('div');
         sortViewList.append(div5);
@@ -256,7 +350,7 @@ export class CatalogView {
         return productsSort;
     }
 
-    createOption(value: string, inner: string): HTMLOptionElement {
+    private createOption(value: string, inner: string): HTMLOptionElement {
         const option = document.createElement('option');
         option.value = value;
         option.className = 'sort-name';
@@ -265,7 +359,7 @@ export class CatalogView {
         return option;
     }
 
-    createItems(product: Product): HTMLDivElement {
+    private createItems(product: Product): HTMLDivElement {
         const item = document.createElement('div');
         item.className = 'item';
         item.setAttribute('data-id', `${product.id}`);
@@ -349,7 +443,7 @@ export class CatalogView {
         const addButton = document.createElement('button');
         addButton.className = 'item__buttons_btn add_btn';
         addButton.innerHTML = 'ADD TO CART';
-        addButton.addEventListener("click", (ev) => this.catalogController?.addItemToShoppingCart(product.id))
+        addButton.addEventListener('click', () => this.catalogController?.addItemToShoppingCart(product.id));
         itemButtons.append(addButton);
 
         const detailsButton = document.createElement('button');
@@ -357,36 +451,33 @@ export class CatalogView {
         detailsButton.innerHTML = 'DETAILS';
         itemButtons.append(detailsButton);
 
+        detailsButton.addEventListener('click', () => {
+            const itemID = item.getAttribute('data-id');
+            window.location.href = `?id=${itemID}#product`;
+        });
+
         return item;
     }
 
-    changeView(): void {
+    public changeView(div: HTMLDivElement): void {
         const sortViewGrid = document.querySelector('.sort__view_grid') as HTMLDivElement;
         const sortViewList = document.querySelector('.sort__view_list') as HTMLDivElement;
-
-        sortViewGrid.addEventListener('click', () => {
+        if (div.classList.contains('sort__view_grid')) {
             const productItems = document.querySelector('.products__items-list') as HTMLDivElement;
             productItems.className = 'products__items';
             sortViewGrid.classList.toggle('active');
             sortViewList.classList.toggle('active');
-        });
-        sortViewList.addEventListener('click', () => {
+        } else if (div.classList.contains('sort__view_list')) {
             const productItems = document.querySelector('.products__items') as HTMLDivElement;
             productItems.className = 'products__items-list';
             sortViewList.classList.toggle('active');
             sortViewGrid.classList.toggle('active');
-        });
+        }
     }
 
-    detailsBtnFunc(): void {
-        const items = document.querySelectorAll('.item');
-        // const
-        items.forEach((item) => {
-            const btn = item.querySelector('.details_btn') as HTMLButtonElement;
-            btn.addEventListener('click', () => {
-                const itemID = item.getAttribute('data-id');
-                window.location.href = `?id=${itemID}#product`;
-            });
-        });
+    public onFilterChange(products: Product[]): void {
+        const productsItems = document.querySelector('.products__items') as HTMLDivElement;
+        productsItems.innerHTML = '';
+        products.forEach((item) => productsItems.append(this.createItems(item)));
     }
 }
