@@ -33,7 +33,6 @@ export class CatalogService {
     }
 
     public changeCategoryQueryParam(param: string): void {
-        // console.log(param)
         const searchParams = new URLSearchParams(window.location.search);
 
         const selectedCategories = searchParams.get('category')?.split('|');
@@ -52,7 +51,6 @@ export class CatalogService {
     }
 
     public changeBrandQueryParam(param: string): void {
-        // console.log(param)
         const searchParams = new URLSearchParams(window.location.search);
 
         const selectedCategories = searchParams.get('brand')?.split('|');
@@ -168,6 +166,42 @@ export class CatalogService {
         if (filter.maxStock > 0) {
             products = products.filter((item) => (item.stock <= filter.maxStock ? item : ''));
         }
+
+        return products;
+    }
+
+    public changeSearchQueryParam(param: string): void {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('search', param);
+        this.insertUrlParam(searchParams);
+    }
+
+    public getTextSearchProducts(data: string, filteredProducts: Product[]): Product[] {
+        // let products = this.getCatalog();
+        let products = filteredProducts;
+        products = products.filter((item) => {
+            if (item.brand.toLowerCase().includes(data)) {
+                return item;
+            }
+            if (item.category.toLowerCase().includes(data)) {
+                return item;
+            }
+            if (item.title.toLowerCase().includes(data)) {
+                return item;
+            }
+            if (`${item.price}`.includes(data)) {
+                return item;
+            }
+            if (`${item.discountPercentage}`.includes(data)) {
+                return item;
+            }
+            if (`${item.rating}`.includes(data)) {
+                return item;
+            }
+            if (`${item.stock}`.includes(data)) {
+                return item;
+            }
+        });
 
         return products;
     }
