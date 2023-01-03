@@ -18,16 +18,6 @@ enum Categories {
     SHOPPING_CART_PATH = 'shoppingcart',
 }
 
-enum Filtres {
-    CATEGORY = 'category',
-    BRAND = 'brand',
-    MIN_PRICE = 'minPrice',
-    MAX_PRICE = 'maxPrice',
-    MIN_STOCK = 'minStock',
-    MAX_STOCK = 'maxStock',
-    SEARCH = 'search',
-}
-
 export class App {
     header: HeaderView;
     footer: Footer;
@@ -93,63 +83,11 @@ export class App {
         this.renderNewPage(hash);
     }
 
-    checkQueryParametersAndRender(): void {
-        const url = document.URL;
-        console.log(url);
-        if (url.includes(Filtres.CATEGORY)) {
-            this.catalogController.onCategoryFilterChange('');
-        }
-        if (url.includes(Filtres.BRAND)) {
-            this.catalogController.onBrandFilterChange('');
-        }
-        if (url.includes(Filtres.MIN_PRICE)) {
-            const numb = url
-                .split('?')[1]
-                .split('&')
-                .find((item) => item.startsWith(Filtres.MIN_PRICE))!
-                .split('=')[1];
-            this.catalogController.onPriceLowerFilterChange(numb);
-        }
-        if (url.includes(Filtres.MAX_PRICE)) {
-            const numb = url
-                .split('?')[1]
-                .split('&')
-                .find((item) => item.startsWith(Filtres.MAX_PRICE))!
-                .split('=')[1];
-            this.catalogController.onPriceUpperFilterChange(numb);
-        }
-        if (url.includes(Filtres.MIN_STOCK)) {
-            const numb = url
-                .split('?')[1]
-                .split('&')
-                .find((item) => item.startsWith(Filtres.MIN_STOCK))!
-                .split('=')[1];
-            this.catalogController.onStockLowerFilterChange(numb);
-        }
-        if (url.includes(Filtres.MAX_STOCK)) {
-            const numb = url
-                .split('?')[1]
-                .split('&')
-                .find((item) => item.startsWith(Filtres.MAX_STOCK))!
-                .split('=')[1];
-            this.catalogController.onStockUpperFilterChange(numb);
-        }
-        if (url.includes(Filtres.SEARCH)) {
-            const str = url
-                .split('?')[1]
-                .split('&')
-                .find((item) => item.startsWith(Filtres.SEARCH))!
-                .split('=')[1];
-            this.catalogController.onSearchFilterChange(str);
-        }
-    }
-
     run(): void {
         this.headerController.drawHeader();
         this.footer.createFooter();
         this.enableRouteChange();
         this.checkHashAndRender();
-        this.checkQueryParametersAndRender();
     }
 
     private getQueryParam(paramName: string): string {
