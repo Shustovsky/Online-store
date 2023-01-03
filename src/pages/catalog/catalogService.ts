@@ -162,41 +162,40 @@ export class CatalogService {
             products = products.filter((item) => filter.brandes.includes(item.brand.toLowerCase()));
         }
         if (filter.minPrice > 0) {
-            products = products.filter((item) => (item.price >= filter.minPrice ? item : ''));
+            products = products.filter((item) => (item.price >= filter.minPrice));
         }
         if (filter.maxPrice > 0) {
-            products = products.filter((item) => (item.price <= filter.maxPrice ? item : ''));
+            products = products.filter((item) => (item.price <= filter.maxPrice));
         }
         if (filter.minStock > 0) {
-            products = products.filter((item) => (item.stock >= filter.minStock ? item : ''));
+            products = products.filter((item) => (item.stock >= filter.minStock));
         }
         if (filter.maxStock > 0) {
-            products = products.filter((item) => (item.stock <= filter.maxStock ? item : ''));
+            products = products.filter((item) => (item.stock <= filter.maxStock));
         }
         if (filter.search) {
             products = products.filter((item) => {
                 if (filter.search) {
                     if (item.brand.toLowerCase().includes(filter.search)) {
-                        return item;
+                        return true;
                     }
                     if (item.category.toLowerCase().includes(filter.search)) {
-                        return item;
+                        return true;
                     }
                     if (item.title.toLowerCase().includes(filter.search)) {
-                        return item;
+                        return true;
                     }
                     if (`${item.price}`.includes(filter.search)) {
-                        return item;
+                        return true;
                     }
                     if (`${item.discountPercentage}`.includes(filter.search)) {
-                        return item;
+                        return true;
                     }
                     if (`${item.rating}`.includes(filter.search)) {
-                        return item;
+                        return true;
                     }
-                    if (`${item.stock}`.includes(filter.search)) {
-                        return item;
-                    }
+                    return `${item.stock}`.includes(filter.search);
+
                 }
             });
         }
