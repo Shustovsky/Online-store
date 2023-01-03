@@ -205,4 +205,14 @@ export class CatalogService {
         searchParams.set('search', param);
         this.insertUrlParam(searchParams);
     }
+
+    public doResetURL() {
+        const newURL = location.href.split("?")[0];
+        window.history.pushState('object', document.title, newURL);
+    }
+
+    public doCopyURL(): Promise<void> {
+        const url = document.location.href;
+        return navigator.clipboard.writeText(url);
+    }
 }

@@ -50,9 +50,10 @@ export class CatalogView {
         filtersButtons.className = 'filters__buttons';
         filters.append(filtersButtons);
 
-        const btnReset = this.createBtn('Reset');
-        const btnCopy = this.createBtn('Copy');
+        const btnReset = this.createResetBtn();
         filtersButtons.append(btnReset);
+
+        const btnCopy = this.createCopyBtn();
         filtersButtons.append(btnCopy);
 
         const categoryFilter = this.createCategoryFilter(filter);
@@ -68,11 +69,22 @@ export class CatalogView {
         return filters;
     }
 
-    private createBtn(name: string): HTMLButtonElement {
+    private createResetBtn(): HTMLButtonElement {
         const btn = document.createElement('button');
-        btn.id = `btn_${name}`;
+        btn.id = `btn_reset`;
         btn.className = 'filters__buttons_btn';
-        btn.innerHTML = name;
+        btn.innerHTML = 'Reset';
+        btn.addEventListener('click', () => this.catalogController?.urlReset());
+
+        return btn;
+    }
+
+    private createCopyBtn(): HTMLButtonElement {
+        const btn = document.createElement('button');
+        btn.id = `btn_copy`;
+        btn.className = 'filters__buttons_btn';
+        btn.innerHTML = 'Copy';
+        btn.addEventListener('click', () => this.catalogController?.urlCopy());
 
         return btn;
     }
@@ -485,5 +497,10 @@ export class CatalogView {
     public changeSortStatValue(products: Product[]): void {
         const sortStatValue = document.querySelector('.sort__stat_value') as HTMLDivElement;
         sortStatValue.innerHTML = `${products.length}`;
+    }
+
+    public deleteCatalog(): void {
+        const main = document.querySelector('main') as HTMLElement;
+        main.remove();
     }
 }
