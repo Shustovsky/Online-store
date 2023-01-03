@@ -84,7 +84,15 @@ export class CatalogView {
         btn.id = `btn_copy`;
         btn.className = 'filters__buttons_btn';
         btn.innerHTML = 'Copy';
-        btn.addEventListener('click', () => this.catalogController?.urlCopy());
+        btn.addEventListener('click', () => {
+            this.catalogController?.urlCopy();
+            btn.classList.add('filters__buttons_btn-active');
+            btn.innerHTML = 'Copied!';
+            setTimeout(() => {
+                btn.classList.remove('filters__buttons_btn-active');
+                btn.innerHTML = 'Copy';
+            }, 1000);
+        });
 
         return btn;
     }
@@ -294,12 +302,13 @@ export class CatalogView {
         const sortOptions = document.createElement('select');
         sortOptions.className = 'sort__options';
         productsSort.append(sortOptions);
+        sortOptions.addEventListener('input', () => this.catalogController?.onSortItems(sortOptions.value));
 
         const sortTitle = this.createOption('sort-title', 'Sort options:');
         const priceHigh = this.createOption('price-high', 'Price: High to Low');
         const priceLow = this.createOption('price-low', 'Price: Low to High');
-        const ratingA = this.createOption('rating-a', 'Name: A to Z');
-        const ratingZ = this.createOption('rating-z', 'Name: Z to A');
+        const ratingA = this.createOption('name-az', 'Name: A to Z');
+        const ratingZ = this.createOption('name-za', 'Name: Z to A');
 
         sortOptions.append(sortTitle);
         sortOptions.append(priceHigh);
@@ -367,6 +376,10 @@ export class CatalogView {
         option.value = value;
         option.className = 'sort-name';
         option.innerHTML = inner;
+        if (value === 'sort-title') {
+            option.selected = true;
+            option.disabled = true;
+        }
 
         return option;
     }
