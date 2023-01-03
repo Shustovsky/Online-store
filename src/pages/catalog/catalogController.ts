@@ -86,4 +86,14 @@ export class CatalogController {
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
     }
+
+    public urlReset() {
+        this.catalogService.doResetURL();
+        this.catalogView.deleteCatalog();
+        this.drawPage();
+    }
+
+    public urlCopy(): Promise<void> {
+        return this.catalogService.doCopyURL();
+    }
 }
