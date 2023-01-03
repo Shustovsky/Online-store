@@ -5,4 +5,5 @@ export class Filter {
     maxPrice = 0;
     minStock = 0;
     maxStock = 0;
+    search? = '';
 }
