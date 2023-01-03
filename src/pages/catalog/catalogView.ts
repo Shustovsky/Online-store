@@ -30,10 +30,8 @@ export class CatalogView {
         productsWrapper.className = 'products';
         mainContainer.append(productsWrapper);
 
-        const productsSort = this.createSortBlock();
+        const productsSort = this.createSortBlock(userFilter);
         productsWrapper.append(productsSort);
-
-        this.createSortBlock();
 
         const productsItems = document.createElement('div');
         productsItems.className = 'products__items';
@@ -304,7 +302,7 @@ export class CatalogView {
         return filtersCategory;
     }
 
-    private createSortBlock(): HTMLDivElement {
+    private createSortBlock(userFilter: Filter): HTMLDivElement {
         const productsSort = document.createElement('div');
         productsSort.className = 'products__sort';
 
@@ -313,11 +311,11 @@ export class CatalogView {
         productsSort.append(sortOptions);
         sortOptions.addEventListener('input', () => this.catalogController?.onSortItems(sortOptions.value));
 
-        const sortTitle = this.createOption('sort-title', 'Sort options:');
-        const priceHigh = this.createOption('price-high', 'Price: High to Low');
-        const priceLow = this.createOption('price-low', 'Price: Low to High');
-        const ratingA = this.createOption('name-az', 'Name: A to Z');
-        const ratingZ = this.createOption('name-za', 'Name: Z to A');
+        const sortTitle = this.createOption('sort-title', 'Sort options:', userFilter);
+        const priceHigh = this.createOption('price-high', 'Price: High to Low', userFilter);
+        const priceLow = this.createOption('price-low', 'Price: Low to High', userFilter);
+        const ratingA = this.createOption('name-az', 'Name: A to Z', userFilter);
+        const ratingZ = this.createOption('name-za', 'Name: Z to A', userFilter);
 
         sortOptions.append(sortTitle);
         sortOptions.append(priceHigh);
@@ -380,14 +378,26 @@ export class CatalogView {
         return productsSort;
     }
 
-    private createOption(value: string, inner: string): HTMLOptionElement {
+    private createOption(value: string, inner: string, userFilter: Filter): HTMLOptionElement {
         const option = document.createElement('option');
         option.value = value;
         option.className = 'sort-name';
         option.innerHTML = inner;
         if (value === 'sort-title') {
-            option.selected = true;
+            option.defaultSelected = true;
             option.disabled = true;
+        }
+        if (userFilter.sort === value) {
+            option.selected = true;
+        }
+        if (userFilter.sort === value) {
+            option.selected = true;
+        }
+        if (userFilter.sort === value) {
+            option.selected = true;
+        }
+        if (userFilter.sort === value) {
+            option.selected = true;
         }
 
         return option;
