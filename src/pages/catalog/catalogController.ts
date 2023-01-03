@@ -22,10 +22,11 @@ export class CatalogController {
     }
 
     public drawPage(): void {
-        const getFilterFromQueryParams = this.catalogService.getFilterFromQueryParams();
-        const catalog = this.catalogService.getFilteredProduct(getFilterFromQueryParams);
+        const userFilter = this.catalogService.getFilterFromQueryParams();
+        const catalog = this.catalogService.getFilteredProduct(userFilter);
         const filter = this.catalogService.getFilter();
-        this.catalogView.createCatalog(catalog, filter);
+        console.log(userFilter);
+        this.catalogView.createCatalog(catalog, filter, userFilter);
         this.catalogView.changeSortStatValue(catalog);
     }
 

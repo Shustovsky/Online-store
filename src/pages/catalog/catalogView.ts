@@ -9,7 +9,7 @@ export class CatalogView {
         this.catalogController = catalogController;
     }
 
-    public createCatalog(products: Product[], filter: Filter): void {
+    public createCatalog(products: Product[], filter: Filter, userFilter: Filter): void {
         const header = document.querySelector('.header') as HTMLElement;
 
         const main = document.createElement('main');
@@ -23,7 +23,7 @@ export class CatalogView {
         mainContainer.className = 'main_container';
         container.append(mainContainer);
 
-        const filters = this.createFilters(filter);
+        const filters = this.createFilters(filter, userFilter);
         mainContainer.append(filters);
 
         const productsWrapper = document.createElement('div');
@@ -42,7 +42,7 @@ export class CatalogView {
         products.forEach((item) => productsItems.append(this.createItems(item)));
     }
 
-    private createFilters(filter: Filter): HTMLDivElement {
+    private createFilters(filter: Filter, userFilter: Filter): HTMLDivElement {
         const filters = document.createElement('div');
         filters.className = 'filters';
 
@@ -56,13 +56,13 @@ export class CatalogView {
         const btnCopy = this.createCopyBtn();
         filtersButtons.append(btnCopy);
 
-        const categoryFilter = this.createCategoryFilter(filter);
-        const brandFilter = this.createBrandFilter(filter);
+        const categoryFilter = this.createCategoryFilter(filter, userFilter);
+        const brandFilter = this.createBrandFilter(filter, userFilter);
         filters.append(categoryFilter);
         filters.append(brandFilter);
 
-        const priceFilter = this.createPriceFilter(filter);
-        const stockFilter = this.createStockFilter(filter);
+        const priceFilter = this.createPriceFilter(filter, userFilter);
+        const stockFilter = this.createStockFilter(filter, userFilter);
         filters.append(priceFilter);
         filters.append(stockFilter);
 
@@ -97,7 +97,7 @@ export class CatalogView {
         return btn;
     }
 
-    private createCategoryFilter(filter: Filter): HTMLDivElement {
+    private createCategoryFilter(filter: Filter, userFilter: Filter): HTMLDivElement {
         const filtersCategory = document.createElement('div');
         filtersCategory.className = `filters__category`;
 
@@ -106,9 +106,8 @@ export class CatalogView {
         filtersCategory.append(filtersCheckbox);
 
         const legend = document.createElement('legend');
-        legend.innerHTML = 'category';
+        legend.innerHTML = 'Category';
         filtersCheckbox.append(legend);
-
         filter.categories.forEach((item) => {
             const div = document.createElement('div');
             filtersCheckbox.append(div);
@@ -117,6 +116,9 @@ export class CatalogView {
             input.type = 'checkbox';
             input.id = `${item}`;
             input.name = `${item}`;
+            if (userFilter.categories.includes(item)) {
+                input.checked = true;
+            }
             div.append(input);
             input.addEventListener('click', () => this.catalogController?.onCategoryFilterChange(item));
 
@@ -129,7 +131,7 @@ export class CatalogView {
         return filtersCategory;
     }
 
-    private createBrandFilter(filter: Filter): HTMLDivElement {
+    private createBrandFilter(filter: Filter, userFilter: Filter): HTMLDivElement {
         const filtersCategory = document.createElement('div');
         filtersCategory.className = `filters__brand`;
 
@@ -138,7 +140,7 @@ export class CatalogView {
         filtersCategory.append(filtersCheckbox);
 
         const legend = document.createElement('legend');
-        legend.innerHTML = 'brand';
+        legend.innerHTML = 'Brand';
         filtersCheckbox.append(legend);
 
         filter.brandes.forEach((item) => {
@@ -149,6 +151,9 @@ export class CatalogView {
             input.type = 'checkbox';
             input.id = `${item}`;
             input.name = `${item}`;
+            if (userFilter.brandes.includes(item)) {
+                input.checked = true;
+            }
             div.append(input);
             input.addEventListener('click', () => this.catalogController?.onBrandFilterChange(item));
 
@@ -161,7 +166,7 @@ export class CatalogView {
         return filtersCategory;
     }
 
-    private createPriceFilter(filter: Filter): HTMLDivElement {
+    private createPriceFilter(filter: Filter, userFilter: Filter): HTMLDivElement {
         const filtersCategory = document.createElement('div');
         filtersCategory.className = 'filters__price';
 
@@ -169,9 +174,9 @@ export class CatalogView {
         filtersRange.className = 'filters-range';
         filtersCategory.append(filtersRange);
 
-        const legend = document.createElement('legend');
-        legend.innerHTML = 'price';
-        filtersRange.append(legend);
+        const legendPrice = document.createElement('legend');
+        legendPrice.innerHTML = 'Price';
+        filtersRange.append(legendPrice);
 
         const filterValue = document.createElement('div');
         filterValue.className = 'filters-range_value';
@@ -185,7 +190,8 @@ export class CatalogView {
         inputLower.type = 'range';
         inputLower.min = `${filter.minPrice}`;
         inputLower.max = `${filter.maxPrice}`;
-        inputLower.value = inputLower.min;
+        inputLower.value = userFilter.minPrice > 0 ? `${userFilter.minPrice}` : inputLower.min;
+
         div.append(inputLower);
 
         const inputUpper = document.createElement('input');
@@ -193,7 +199,8 @@ export class CatalogView {
         inputUpper.type = 'range';
         inputUpper.min = `${filter.minPrice}`;
         inputUpper.max = `${filter.maxPrice}`;
-        inputUpper.value = inputUpper.max;
+        inputUpper.value = userFilter.maxPrice > 0 ? `${userFilter.maxPrice}` : inputUpper.max;
+
         div.append(inputUpper);
 
         filterValue.innerHTML = `${inputLower.value} - ${inputUpper.value}`;
@@ -228,7 +235,7 @@ export class CatalogView {
         return filtersCategory;
     }
 
-    private createStockFilter(filter: Filter): HTMLDivElement {
+    private createStockFilter(filter: Filter, userFilter: Filter): HTMLDivElement {
         const filtersCategory = document.createElement('div');
         filtersCategory.className = 'filters__stock';
 
@@ -237,7 +244,7 @@ export class CatalogView {
         filtersCategory.append(filtersRange);
 
         const legend = document.createElement('legend');
-        legend.innerHTML = 'stock';
+        legend.innerHTML = 'Stock';
         filtersRange.append(legend);
 
         const filterValue = document.createElement('div');
@@ -252,7 +259,8 @@ export class CatalogView {
         inputLower.type = 'range';
         inputLower.min = `${filter.minStock}`;
         inputLower.max = `${filter.maxStock}`;
-        inputLower.value = inputLower.min;
+        inputLower.value = userFilter.minStock > 0 ? `${userFilter.minStock}` : inputLower.min;
+
         div.append(inputLower);
 
         const inputUpper = document.createElement('input');
@@ -260,7 +268,8 @@ export class CatalogView {
         inputUpper.type = 'range';
         inputUpper.min = `${filter.minStock}`;
         inputUpper.max = `${filter.maxStock}`;
-        inputUpper.value = inputUpper.max;
+        inputUpper.value = userFilter.maxStock > 0 ? `${userFilter.maxStock}` : inputUpper.max;
+
         div.append(inputUpper);
 
         filterValue.innerHTML = `${inputLower.value} - ${inputUpper.value}`;
