@@ -140,7 +140,7 @@ export class App {
                 .split('&')
                 .find((item) => item.startsWith(Filtres.SEARCH))!
                 .split('=')[1];
-            this.catalogController.textSearchProducts(str);
+            this.catalogController.onSearchFilterChange(str);
         }
     }
 
