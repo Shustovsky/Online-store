@@ -21,11 +21,12 @@ export class CatalogController {
         this.headerView = headerView;
     }
 
-    public drawPage() {
-        const getFilterFromQueryParams = this.catalogService.getFilterFromQueryParams();
-        const catalog = this.catalogService.getFilteredProduct(getFilterFromQueryParams);
+    public drawPage(): void {
+        const userFilter = this.catalogService.getFilterFromQueryParams();
+        const catalog = this.catalogService.getFilteredProduct(userFilter);
         const filter = this.catalogService.getFilter();
-        this.catalogView.createCatalog(catalog, filter);
+        console.log(userFilter);
+        this.catalogView.createCatalog(catalog, filter, userFilter);
         this.catalogView.changeSortStatValue(catalog);
     }
 
@@ -34,60 +35,60 @@ export class CatalogController {
         this.headerView.onShoppingCardChange(shoppingCart);
     }
 
-    public onCategoryFilterChange(name: string) {
+    public onCategoryFilterChange(name: string): void {
         this.catalogService.changeCategoryQueryParam(name);
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
     }
 
-    public onBrandFilterChange(name: string) {
+    public onBrandFilterChange(name: string): void {
         this.catalogService.changeBrandQueryParam(name);
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
     }
 
-    public onPriceLowerFilterChange(name: string) {
+    public onPriceLowerFilterChange(name: string): void {
         this.catalogService.changeMinPriceQueryParam(name);
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
     }
 
-    public onPriceUpperFilterChange(name: string) {
+    public onPriceUpperFilterChange(name: string): void {
         this.catalogService.changeMaxPriceQueryParam(name);
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
     }
 
-    public onStockLowerFilterChange(name: string) {
+    public onStockLowerFilterChange(name: string): void {
         this.catalogService.changeMinStockQueryParam(name);
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
     }
 
-    public onStockUpperFilterChange(name: string) {
+    public onStockUpperFilterChange(name: string): void {
         this.catalogService.changeMaxStockQueryParam(name);
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
     }
 
-    public changeViewItems(div: HTMLDivElement) {
+    public changeViewItems(div: HTMLDivElement): void {
         this.catalogView.changeView(div);
     }
 
-    public onSearchFilterChange(data: string) {
+    public onSearchFilterChange(data: string): void {
         this.catalogService.changeSearchQueryParam(data);
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
     }
 
-    public urlReset() {
+    public urlReset(): void {
         this.catalogService.doResetURL();
         this.catalogView.deleteCatalog();
         this.drawPage();
@@ -95,5 +96,12 @@ export class CatalogController {
 
     public urlCopy(): Promise<void> {
         return this.catalogService.doCopyURL();
+    }
+
+    public onSortItems(value: string): void {
+        this.catalogService.changeSortParam(value);
+        const userFilter = this.catalogService.getFilterFromQueryParams();
+        const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
+        this.catalogView.onFilterChange(filteredProducts);
     }
 }

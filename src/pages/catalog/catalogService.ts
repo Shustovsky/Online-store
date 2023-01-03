@@ -145,6 +145,10 @@ export class CatalogService {
         if (search) {
             filter.search = search;
         }
+        const sort = searchParams.get('sort');
+        if (sort) {
+            filter.sort = sort;
+        }
         return filter;
     }
 
@@ -196,7 +200,20 @@ export class CatalogService {
                 }
             });
         }
-
+        if (filter.sort) {
+            if (filter.sort === 'price-high') {
+                products = products.sort((a, b) => b.price - a.price);
+            }
+            if (filter.sort === 'price-low') {
+                products = products.sort((a, b) => a.price - b.price);
+            }
+            if (filter.sort === 'name-az') {
+                products = products.sort((a, b) => a.title.localeCompare(b.title));
+            }
+            if (filter.sort === 'name-za') {
+                products = products.sort((a, b) => b.title.localeCompare(a.title));
+            }
+        }
         return products;
     }
 
@@ -207,12 +224,18 @@ export class CatalogService {
     }
 
     public doResetURL() {
-        const newURL = location.href.split("?")[0];
+        const newURL = location.href.split('?')[0];
         window.history.pushState('object', document.title, newURL);
     }
 
     public doCopyURL(): Promise<void> {
         const url = document.location.href;
         return navigator.clipboard.writeText(url);
+    }
+
+    public changeSortParam(value: string): void {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('sort', value);
+        this.insertUrlParam(searchParams);
     }
 }

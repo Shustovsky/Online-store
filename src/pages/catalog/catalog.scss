@@ -32,6 +32,10 @@ main {
                 cursor: pointer;
                 transition: 0.5s all;
 
+                &-active {
+                    background: lightgreen;
+                }
+
                 &:hover {
                     background: lightcoral;
                 }

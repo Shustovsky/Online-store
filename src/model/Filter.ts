@@ -6,4 +6,5 @@ export class Filter {
     minStock = 0;
     maxStock = 0;
     search? = '';
+    sort? = '';
 }
