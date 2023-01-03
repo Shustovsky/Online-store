@@ -78,4 +78,12 @@ export class CatalogController {
     public changeViewItems(div: HTMLDivElement) {
         this.catalogView.changeView(div);
     }
+
+    public onSearchFilterChange(data: string) {
+        this.catalogService.changeSearchQueryParam(data);
+        const userFilter = this.catalogService.getFilterFromQueryParams();
+        const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
+        const foundProducts = this.catalogService.getTextSearchProducts(data, filteredProducts);
+        this.catalogView.onFilterChange(foundProducts);
+    }
 }
