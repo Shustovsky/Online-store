@@ -313,6 +313,9 @@ export class CatalogView {
         sortSearch.type = 'search';
         sortSearch.placeholder = 'Search product';
         productsSort.append(sortSearch);
+        sortSearch.addEventListener('input', () =>
+            this.catalogController?.onSearchFilterChange(sortSearch.value.toLowerCase())
+        );
 
         const sortView = document.createElement('div');
         sortView.className = 'sort__view';
@@ -394,7 +397,7 @@ export class CatalogView {
         itemDscr.append(itemDscrBrand);
 
         const spanBrand = document.createElement('span');
-        spanBrand.innerHTML = product.brand;
+        spanBrand.innerHTML = product.brand.toLowerCase();
         itemDscrBrand.append(spanBrand);
 
         const itemDscrPrice = document.createElement('div');

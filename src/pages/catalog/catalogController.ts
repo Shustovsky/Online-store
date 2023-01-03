@@ -22,7 +22,8 @@ export class CatalogController {
     }
 
     public drawPage() {
-        const catalog = this.catalogService.getCatalog();
+        const getFilterFromQueryParams = this.catalogService.getFilterFromQueryParams();
+        const catalog = this.catalogService.getFilteredProduct(getFilterFromQueryParams);
         const filter = this.catalogService.getFilter();
         this.catalogView.createCatalog(catalog, filter);
         this.catalogView.changeSortStatValue(catalog);
@@ -77,5 +78,12 @@ export class CatalogController {
 
     public changeViewItems(div: HTMLDivElement) {
         this.catalogView.changeView(div);
+    }
+
+    public onSearchFilterChange(data: string) {
+        this.catalogService.changeSearchQueryParam(data);
+        const userFilter = this.catalogService.getFilterFromQueryParams();
+        const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
+        this.catalogView.onFilterChange(filteredProducts);
     }
 }

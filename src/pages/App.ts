@@ -12,7 +12,7 @@ import { ProductService } from './product/productService';
 import { ShoppingCartView } from './shoppingcart/shoppingCartView';
 import { ProductView } from './product/productView';
 
-export const enum Categories {
+enum Categories {
     CATALOG_PATH = 'catalog',
     PRODUCT_PATH = 'product',
     SHOPPING_CART_PATH = 'shoppingcart',
