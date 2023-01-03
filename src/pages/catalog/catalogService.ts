@@ -141,6 +141,10 @@ export class CatalogService {
         if (maxStock) {
             filter.maxStock = +maxStock;
         }
+        const search = searchParams.get('search');
+        if (search) {
+            filter.search = search;
+        }
         return filter;
     }
 
@@ -152,7 +156,6 @@ export class CatalogService {
         }
         if (filter.brandes.length > 0) {
             products = products.filter((item) => filter.brandes.includes(item.brand.toLowerCase()));
-            console.log(products);
         }
         if (filter.minPrice > 0) {
             products = products.filter((item) => (item.price >= filter.minPrice ? item : ''));
@@ -166,6 +169,33 @@ export class CatalogService {
         if (filter.maxStock > 0) {
             products = products.filter((item) => (item.stock <= filter.maxStock ? item : ''));
         }
+        if (filter.search) {
+            products = products.filter((item) => {
+                if (filter.search) {
+                    if (item.brand.toLowerCase().includes(filter.search)) {
+                        return item;
+                    }
+                    if (item.category.toLowerCase().includes(filter.search)) {
+                        return item;
+                    }
+                    if (item.title.toLowerCase().includes(filter.search)) {
+                        return item;
+                    }
+                    if (`${item.price}`.includes(filter.search)) {
+                        return item;
+                    }
+                    if (`${item.discountPercentage}`.includes(filter.search)) {
+                        return item;
+                    }
+                    if (`${item.rating}`.includes(filter.search)) {
+                        return item;
+                    }
+                    if (`${item.stock}`.includes(filter.search)) {
+                        return item;
+                    }
+                }
+            });
+        }
 
         return products;
     }
@@ -174,35 +204,5 @@ export class CatalogService {
         const searchParams = new URLSearchParams(window.location.search);
         searchParams.set('search', param);
         this.insertUrlParam(searchParams);
-    }
-
-    public getTextSearchProducts(data: string, filteredProducts: Product[]): Product[] {
-        // let products = this.getCatalog();
-        let products = filteredProducts;
-        products = products.filter((item) => {
-            if (item.brand.toLowerCase().includes(data)) {
-                return item;
-            }
-            if (item.category.toLowerCase().includes(data)) {
-                return item;
-            }
-            if (item.title.toLowerCase().includes(data)) {
-                return item;
-            }
-            if (`${item.price}`.includes(data)) {
-                return item;
-            }
-            if (`${item.discountPercentage}`.includes(data)) {
-                return item;
-            }
-            if (`${item.rating}`.includes(data)) {
-                return item;
-            }
-            if (`${item.stock}`.includes(data)) {
-                return item;
-            }
-        });
-
-        return products;
     }
 }
