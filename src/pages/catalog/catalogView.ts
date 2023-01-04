@@ -34,7 +34,7 @@ export class CatalogView {
         productsWrapper.append(productsSort);
 
         const productsItems = document.createElement('div');
-        productsItems.className = 'products__items';
+        productsItems.className = 'products__items products__items-grid';
         productsWrapper.append(productsItems);
 
         products.forEach((item) => productsItems.append(this.createItems(item)));
@@ -509,21 +509,18 @@ export class CatalogView {
     public changeView(name: string | null): void {
         const sortViewGrid = document.querySelector('.sort__view_grid') as HTMLDivElement;
         const sortViewList = document.querySelector('.sort__view_list') as HTMLDivElement;
+        const productItems = document.querySelector('.products__items') as HTMLDivElement;
         if (name === 'Grid') {
-            const productItems = document.querySelector('.products__items-list') as HTMLDivElement;
-            if (productItems) {
-                productItems.className = 'products__items';
-            }
+            productItems.classList.add('products__items-grid');
+            productItems.classList.remove('products__items-list');
             sortViewGrid.classList.add('active');
             sortViewList.classList.remove('active');
         }
         if (name === 'List') {
-            const productItems = document.querySelector('.products__items') as HTMLDivElement;
-            if (productItems) {
-                productItems.className = 'products__items-list';
-            }
-            sortViewList.classList.add('active');
+            productItems.classList.add('products__items-list');
+            productItems.classList.remove('products__items-grid');
             sortViewGrid.classList.remove('active');
+            sortViewList.classList.add('active');
         }
     }
 
@@ -537,6 +534,10 @@ export class CatalogView {
     public changeSortStatValue(products: Product[]): void {
         const sortStatValue = document.querySelector('.sort__stat_value') as HTMLDivElement;
         sortStatValue.innerHTML = `${products.length}`;
+        if (products.length === 0) {
+            const productItems = document.querySelector('.products__items') as HTMLDivElement;
+            productItems.innerHTML = 'No products found!';
+        }
     }
 
     public deleteCatalog(): void {

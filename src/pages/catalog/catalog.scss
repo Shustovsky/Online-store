@@ -212,80 +212,82 @@ main {
         }
 
         &__items {
-            margin-top: 1%;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
+            &-grid {
+                margin-top: 1%;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 25px;
 
-            .item {
-                height: 200px;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: flex-start;
-                border-radius: 10px;
-                overflow: hidden;
-                background-color: #ffffff;
-                z-index: 0;
-
-
-                &:hover .item__dscr {
-
-                    transform: translateX(0);
-                    transition: 0.7s all;
-                }
-
-                &_name {
-                    background: rgba(240, 128, 128, 0.5);
-                    backdrop-filter: blur(2px);
-                    padding: 3%;
-                    width: 100%;
-                    text-align: center;
-                    font-weight: bold;
-                    color: white;
-                }
-
-                &_img {
-                    position: absolute;
-                    z-index: -1;
-
-                    img {
-                        border-radius: 10px;
-                        object-fit: cover;
-                        width: 215px;
-                        height: 200px;
-                    }
-                }
-
-                &__dscr {
-                    background: rgba(255, 255, 255, 0.8);
-                    transform: translateX(-100%);
-
-                    span {
-                        font-weight: bold;
-                    }
-                }
-
-                &__buttons {
-                    width: 100%;
+                .item {
+                    height: 200px;
                     display: flex;
-                    justify-content: space-around;
-                    align-items: center;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    background-color: #ffffff;
+                    z-index: 0;
 
-                    &_btn {
-                        margin: 1%;
-                        padding: 3px;
-                        border-radius: 8px;
-                        border: none;
-                        cursor: pointer;
-                        transition: 0.5s all;
 
-                        &:hover {
-                            background: lightcoral;
+                    &:hover .item__dscr {
+
+                        transform: translateX(0);
+                        transition: 0.7s all;
+                    }
+
+                    &_name {
+                        background: rgba(240, 128, 128, 0.5);
+                        backdrop-filter: blur(2px);
+                        padding: 3%;
+                        width: 100%;
+                        text-align: center;
+                        font-weight: bold;
+                        color: white;
+                    }
+
+                    &_img {
+                        position: absolute;
+                        z-index: -1;
+
+                        img {
+                            border-radius: 10px;
+                            object-fit: cover;
+                            width: 215px;
+                            height: 200px;
                         }
+                    }
 
-                        &:active {
-                            background: lightgreen;
+                    &__dscr {
+                        background: rgba(255, 255, 255, 0.8);
+                        transform: translateX(-100%);
+
+                        span {
+                            font-weight: bold;
+                        }
+                    }
+
+                    &__buttons {
+                        width: 100%;
+                        display: flex;
+                        justify-content: space-around;
+                        align-items: center;
+
+                        &_btn {
+                            margin: 1%;
+                            padding: 3px;
+                            border-radius: 8px;
+                            border: none;
+                            cursor: pointer;
+                            transition: 0.5s all;
+
+                            &:hover {
+                                background: lightcoral;
+                            }
+
+                            &:active {
+                                background: lightgreen;
+                            }
                         }
                     }
                 }
