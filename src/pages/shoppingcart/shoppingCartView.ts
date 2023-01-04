@@ -57,9 +57,58 @@ export class ShoppingCartView {
         modalBtn.className = 'shoppingcart__modal-btn';
         modalBtn.type = 'submit';
         modalBtn.textContent = 'confirm';
+        modalBtn.addEventListener('click', () => {
+            const name = document.getElementById('personalName') as HTMLInputElement;
+            const isValidName = this.shoppingCartController?.validateName(name.value);
+
+            const phoneNumber = document.getElementById('phoneNumber') as HTMLInputElement;
+            const isValidPhoneNumber = this.shoppingCartController?.validatePhone(phoneNumber.value);
+
+            const address = document.getElementById('address') as HTMLInputElement;
+            const isValidAddress = this.shoppingCartController?.validateAddress(address.value);
+
+            const email = document.getElementById('email') as HTMLInputElement;
+            const isValidEmail = this.shoppingCartController?.validateEmail(email.value);
+
+            const cartNumber = document.querySelector('.shoppingcart__cart-number') as HTMLInputElement;
+            const isValidCartNumber = this.shoppingCartController?.validateCartNumber(cartNumber.value);
+
+            const thru = document.querySelector('.shoppingcart__valid-thru') as HTMLInputElement;
+            const isValidThru = this.shoppingCartController?.validateThru(thru.value);
+
+            const cvv = document.querySelector('.shoppingcart__valid-code') as HTMLInputElement;
+            const isValidCvv = this.shoppingCartController?.validateCvv(cvv.value);
+
+            if (
+                isValidName &&
+                isValidPhoneNumber &&
+                isValidAddress &&
+                isValidEmail &&
+                isValidCartNumber &&
+                isValidThru &&
+                isValidCvv
+            ) {
+                modalPersonalDetails.remove();
+                modalCartDetails.remove();
+                modalBtn.remove();
+
+                const modalConfirm = document.createElement('div');
+                modalConfirm.className = 'shoppingcart__modal-confirm';
+                modalConfirm.textContent = 'your order has been placed';
+
+                modal.append(modalConfirm);
+
+                setTimeout(() => {
+                    this.shoppingCartController?.clearShoppingCart();
+                    this.closeModalWrapper();
+                    window.location.href = '#catalog';
+                }, 3000);
+            }
+        });
 
         modal.append(modalPersonalDetails);
         modal.append(modalCartDetails);
+        modal.append(modalBtn);
         modalWrapper.append(modal);
         container.append(modalWrapper);
 
@@ -81,22 +130,87 @@ export class ShoppingCartView {
 
         modalPersonalDetails.append(modalPersonalTitle);
 
-        this.createFormDetail(modalPersonalDetails, 'Name');
-        this.createFormDetail(modalPersonalDetails, 'Phone number');
-        this.createFormDetail(modalPersonalDetails, 'Delivery address');
-        this.createFormDetail(modalPersonalDetails, 'E-mail');
+        this.createNameItem(modalPersonalDetails);
+        this.createPhoneNumItem(modalPersonalDetails);
+        this.createAddressItem(modalPersonalDetails);
+        this.createEmailItem(modalPersonalDetails);
 
         return modalPersonalDetails;
     }
 
-    private createFormDetail(modalPersonalDetails: HTMLElement, placeholder: string): HTMLElement {
+    private createNameItem(modalPersonalDetails: HTMLElement): HTMLElement {
         const formDetail = document.createElement('div');
-        formDetail.className = 'shoppingcart__form-detail';
+        formDetail.className = 'shoppingcart__form-detail name';
 
         const formItem = document.createElement('input');
         formItem.className = 'shoppingcart__form-item';
         formItem.type = 'text';
-        formItem.placeholder = placeholder;
+        formItem.placeholder = 'Name';
+        formItem.id = 'personalName';
+        formItem.addEventListener('blur', (ev) => {
+            const target = ev.target as HTMLInputElement;
+            this.shoppingCartController?.validateName(target.value);
+        });
+
+        formDetail.append(formItem);
+        modalPersonalDetails.append(formDetail);
+
+        return modalPersonalDetails;
+    }
+
+    private createPhoneNumItem(modalPersonalDetails: HTMLElement): HTMLElement {
+        const formDetail = document.createElement('div');
+        formDetail.className = 'shoppingcart__form-detail phoneNumber';
+
+        const formItem = document.createElement('input');
+        formItem.className = 'shoppingcart__form-item';
+        formItem.type = 'text';
+        formItem.placeholder = 'Phone number';
+        formItem.id = 'phoneNumber';
+        formItem.addEventListener('blur', (ev) => {
+            const target = ev.target as HTMLInputElement;
+            this.shoppingCartController?.validatePhone(target.value);
+        });
+
+        formDetail.append(formItem);
+        modalPersonalDetails.append(formDetail);
+
+        return modalPersonalDetails;
+    }
+
+    private createAddressItem(modalPersonalDetails: HTMLElement): HTMLElement {
+        const formDetail = document.createElement('div');
+        formDetail.className = 'shoppingcart__form-detail address';
+
+        const formItem = document.createElement('input');
+        formItem.className = 'shoppingcart__form-item';
+        formItem.type = 'text';
+        formItem.placeholder = 'Delivery address';
+        formItem.id = 'address';
+        formItem.addEventListener('blur', (ev) => {
+            const target = ev.target as HTMLInputElement;
+            this.shoppingCartController?.validateAddress(target.value);
+        });
+
+        formDetail.append(formItem);
+        modalPersonalDetails.append(formDetail);
+
+        return modalPersonalDetails;
+    }
+
+    private createEmailItem(modalPersonalDetails: HTMLElement): HTMLElement {
+        const formDetail = document.createElement('div');
+        formDetail.className = 'shoppingcart__form-detail email';
+
+        const formItem = document.createElement('input');
+        formItem.className = 'shoppingcart__form-item';
+        formItem.type = 'text';
+        formItem.placeholder = 'E-mail';
+        formItem.id = 'email';
+        formItem.addEventListener('blur', (ev) => {
+            const target = ev.target as HTMLInputElement;
+            this.shoppingCartController?.validateEmail(target.value);
+        });
 
         formDetail.append(formItem);
         modalPersonalDetails.append(formDetail);
@@ -125,7 +239,6 @@ export class ShoppingCartView {
         modalCartWrapper.className = 'shoppingcart__modal-cart-wrapper';
 
         const cartWrapper = this.createCartWrapper();
-
         const otherData = this.createOtherData();
 
         modalCartWrapper.append(cartWrapper);
@@ -149,6 +262,11 @@ export class ShoppingCartView {
         cartNumber.type = 'text';
         cartNumber.placeholder = 'Cart number';
 
+        cartNumber.addEventListener('blur', (ev) => {
+            const target = ev.target as HTMLInputElement;
+            this.shoppingCartController?.validateCartNumber(target.value);
+        });
+
         cartWrapper.append(cartImg);
         cartWrapper.append(cartNumber);
 
@@ -171,11 +289,43 @@ export class ShoppingCartView {
         validThru.className = 'shoppingcart__valid-thru';
         validThru.type = 'text';
         validThru.placeholder = 'Valid Thru';
+        validThru.addEventListener('input', (ev) => {
+            const target = ev.target as HTMLInputElement;
+            let value = target.value;
+            value = value.replace(/[^0-9/]/gi, '');
+            target.value = value;
+            if (value.length <= 5) {
+                if (value.length === 2) {
+                    value = value + '/';
+                    target.value = value;
+                }
+            } else {
+                target.value = value.slice(0, -1);
+            }
+        });
+        validThru.addEventListener('blur', (ev) => {
+            const target = ev.target as HTMLInputElement;
+            this.shoppingCartController?.validateThru(target.value);
+        });
 
         const validCode = document.createElement('input');
         validCode.className = 'shoppingcart__valid-code';
         validCode.type = 'text';
         validCode.placeholder = 'Code';
+
+        validCode.addEventListener('input', (ev) => {
+            const target = ev.target as HTMLInputElement;
+            let value = target.value;
+            value = value.replace(/[^0-9/]/gi, '');
+            target.value = value;
+            if (value.length > 3) {
+                target.value = value.slice(0, -1);
+            }
+        });
+        validCode.addEventListener('blur', (ev) => {
+            const target = ev.target as HTMLInputElement;
+            this.shoppingCartController?.validateCvv(target.value);
+        });
 
         validData.append(validThru);
         validCvv.append(validCode);
@@ -510,5 +660,110 @@ export class ShoppingCartView {
         totalWrapper.append(totalCost);
 
         return totalWrapper;
+    }
+
+    public createNameError(): void {
+        if (!document.querySelector('.name-error')) {
+            const name = document.querySelector('.name') as HTMLElement;
+            const error = document.createElement('div');
+            error.className = 'error-massage name-error';
+            error.textContent = 'error';
+            name.append(error);
+        }
+    }
+
+    public deleteNameError(): void {
+        const nameError = document.querySelector('.name-error') as HTMLElement;
+        nameError?.remove();
+    }
+
+    public createPhoneNumberError(): void {
+        if (!document.querySelector('.phone-number-error')) {
+            const phoneNumber = document.querySelector('.phoneNumber') as HTMLElement;
+            const error = document.createElement('div');
+            error.className = 'error-massage phone-number-error';
+            error.textContent = 'error';
+            phoneNumber.append(error);
+        }
+    }
+
+    public deletePhoneNumberError(): void {
+        const phoneNumberError = document.querySelector('.phone-number-error') as HTMLElement;
+        phoneNumberError?.remove();
+    }
+
+    public createAddressError(): void {
+        if (!document.querySelector('.address-error')) {
+            const address = document.querySelector('.address') as HTMLElement;
+            const error = document.createElement('div');
+            error.className = 'error-massage address-error';
+            error.textContent = 'error';
+            address.append(error);
+        }
+    }
+
+    public deleteAddressError(): void {
+        const phoneNumberError = document.querySelector('.address-error') as HTMLElement;
+        phoneNumberError?.remove();
+    }
+
+    public createEmailError(): void {
+        if (!document.querySelector('.email-error')) {
+            const email = document.querySelector('.email') as HTMLElement;
+            const error = document.createElement('div');
+            error.className = 'error-massage email-error';
+            error.textContent = 'error';
+            email.append(error);
+        }
+    }
+
+    public deleteEmailError(): void {
+        const emailError = document.querySelector('.email-error') as HTMLElement;
+        emailError?.remove();
+    }
+
+    public createModalCartNumberError(): void {
+        if (!document.querySelector('.cart-number-error')) {
+            const modalCartDetails = document.querySelector('.shoppingcart__modal-cart-details') as HTMLElement;
+            const cartNumber = document.createElement('div');
+            cartNumber.className = 'error-massage cart-number-error'; // todo title class?
+            cartNumber.textContent = 'Cart number - error';
+            modalCartDetails.append(cartNumber);
+        }
+    }
+
+    public deleteModalCartNumberError(): void {
+        const emailError = document.querySelector('.cart-number-error') as HTMLElement;
+        emailError?.remove();
+    }
+
+    public createThruError(): void {
+        if (!document.querySelector('.thru-error')) {
+            const modalCartDetails = document.querySelector('.shoppingcart__modal-cart-details') as HTMLElement;
+            const thruError = document.createElement('div');
+            thruError.className = 'error-massage thru-error'; // todo title class?
+            thruError.textContent = 'Card valid thru - error';
+            modalCartDetails.append(thruError);
+        }
+    }
+
+    public deleteThruError(): void {
+        const thruError = document.querySelector('.thru-error') as HTMLElement;
+        thruError?.remove();
+    }
+
+    public createCvvError(): void {
+        if (!document.querySelector('.cvv-error')) {
+            const modalCartDetails = document.querySelector('.shoppingcart__modal-cart-details') as HTMLElement;
+            const cvvError = document.createElement('div');
+            cvvError.className = 'error-massage cvv-error'; // todo title class?
+            cvvError.textContent = 'Card CVV - error';
+            modalCartDetails.append(cvvError);
+        }
+    }
+
+    public deleteCvvError(): void {
+        const cvvError = document.querySelector('.cvv-error') as HTMLElement;
+        cvvError?.remove();
     }
 }

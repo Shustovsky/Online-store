@@ -11,6 +11,7 @@ import { ShoppingcartService } from './shoppingcart/shoppingcartService';
 import { ProductService } from './product/productService';
 import { ShoppingCartView } from './shoppingcart/shoppingCartView';
 import { ProductView } from './product/productView';
+import { ShoppingcartValidator } from './shoppingcart/shoppingcartValidationServise';
 
 enum Categories {
     CATALOG_PATH = 'catalog',
@@ -40,7 +41,13 @@ export class App {
         catalogView.catalogController = this.catalogController;
 
         const shoppingCartView = new ShoppingCartView(null);
-        this.shoppingCartController = new ShoppingCartController(shoppingcartService, shoppingCartView, this.header);
+        const shoppingcartValidator = new ShoppingcartValidator();
+        this.shoppingCartController = new ShoppingCartController(
+            shoppingcartService,
+            shoppingcartValidator,
+            shoppingCartView,
+            this.header
+        );
         shoppingCartView.shoppingCartController = this.shoppingCartController;
 
         const productView = new ProductView(null);

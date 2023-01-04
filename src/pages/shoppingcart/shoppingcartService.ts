@@ -74,6 +74,12 @@ export class ShoppingcartService {
         localStorage.setItem('shoppingCart', shoppingCartJson);
     }
 
+    public clearShoppingCart(): ShoppingCart {
+        const shoppingCart = new ShoppingCart();
+        this.saveShoppingCart(shoppingCart);
+        return shoppingCart;
+    }
+
     private getShoppingCartItem(shoppingCart: ShoppingCart, productId: number): Item | undefined {
         return shoppingCart.products.find((productWrapper) => productWrapper.product.id === productId);
     }
