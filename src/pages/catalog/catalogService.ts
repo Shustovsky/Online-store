@@ -92,6 +92,24 @@ export class CatalogService {
         this.insertUrlParam(searchParams);
     }
 
+    public changeSearchQueryParam(param: string): void {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('search', param);
+        this.insertUrlParam(searchParams);
+    }
+
+    public changeSortParam(value: string): void {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('sort', value);
+        this.insertUrlParam(searchParams);
+    }
+
+    public changeViewParam(value: string): void {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('view', value);
+        this.insertUrlParam(searchParams);
+    }
+
     private insertUrlParam(searchParams: URLSearchParams): void {
         searchParams.forEach((value, key) => {
             if (!value || key === 'id') {
@@ -215,10 +233,9 @@ export class CatalogService {
         return products;
     }
 
-    public changeSearchQueryParam(param: string): void {
+    public getChangeView(): string | null {
         const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set('search', param);
-        this.insertUrlParam(searchParams);
+        return searchParams.get('view');
     }
 
     public doResetURL() {
@@ -229,11 +246,5 @@ export class CatalogService {
     public doCopyURL(): Promise<void> {
         const url = document.location.href;
         return navigator.clipboard.writeText(url);
-    }
-
-    public changeSortParam(value: string): void {
-        const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set('sort', value);
-        this.insertUrlParam(searchParams);
     }
 }

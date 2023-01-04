@@ -340,6 +340,9 @@ export class CatalogView {
         sortSearch.id = 'sort_search';
         sortSearch.type = 'search';
         sortSearch.placeholder = 'Search product';
+        if (userFilter.search) {
+            sortSearch.value = userFilter.search;
+        }
         productsSort.append(sortSearch);
         sortSearch.addEventListener('input', () =>
             this.catalogController?.onSearchFilterChange(sortSearch.value.toLowerCase())
@@ -353,7 +356,7 @@ export class CatalogView {
         sortViewGrid.className = 'sort__view_grid active';
         sortViewGrid.title = 'Grid';
         sortView.append(sortViewGrid);
-        sortViewGrid.addEventListener('click', () => this.catalogController?.changeViewItems(sortViewGrid));
+        sortViewGrid.addEventListener('click', () => this.catalogController?.changeViewItems(sortViewGrid.title));
 
         const div1 = document.createElement('div');
         sortViewGrid.append(div1);
@@ -368,7 +371,7 @@ export class CatalogView {
         sortViewList.className = 'sort__view_list';
         sortViewList.title = 'List';
         sortView.append(sortViewList);
-        sortViewList.addEventListener('click', () => this.catalogController?.changeViewItems(sortViewList));
+        sortViewList.addEventListener('click', () => this.catalogController?.changeViewItems(sortViewList.title));
 
         const div5 = document.createElement('div');
         sortViewList.append(div5);
@@ -503,19 +506,24 @@ export class CatalogView {
         return item;
     }
 
-    public changeView(div: HTMLDivElement): void {
+    public changeView(name: string | null): void {
         const sortViewGrid = document.querySelector('.sort__view_grid') as HTMLDivElement;
         const sortViewList = document.querySelector('.sort__view_list') as HTMLDivElement;
-        if (div.classList.contains('sort__view_grid')) {
+        if (name === 'Grid') {
             const productItems = document.querySelector('.products__items-list') as HTMLDivElement;
-            productItems.className = 'products__items';
-            sortViewGrid.classList.toggle('active');
-            sortViewList.classList.toggle('active');
-        } else if (div.classList.contains('sort__view_list')) {
+            if (productItems) {
+                productItems.className = 'products__items';
+            }
+            sortViewGrid.classList.add('active');
+            sortViewList.classList.remove('active');
+        }
+        if (name === 'List') {
             const productItems = document.querySelector('.products__items') as HTMLDivElement;
-            productItems.className = 'products__items-list';
-            sortViewList.classList.toggle('active');
-            sortViewGrid.classList.toggle('active');
+            if (productItems) {
+                productItems.className = 'products__items-list';
+            }
+            sortViewList.classList.add('active');
+            sortViewGrid.classList.remove('active');
         }
     }
 
