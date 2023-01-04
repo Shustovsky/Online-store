@@ -25,9 +25,10 @@ export class CatalogController {
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const catalog = this.catalogService.getFilteredProduct(userFilter);
         const filter = this.catalogService.getFilter();
-        console.log(userFilter);
         this.catalogView.createCatalog(catalog, filter, userFilter);
         this.catalogView.changeSortStatValue(catalog);
+        const view = this.catalogService.getChangeView();
+        this.catalogView.changeView(view);
     }
 
     public addItemToShoppingCart(productId: number): void {
@@ -77,8 +78,9 @@ export class CatalogController {
         this.catalogView.onFilterChange(filteredProducts);
     }
 
-    public changeViewItems(div: HTMLDivElement): void {
-        this.catalogView.changeView(div);
+    public changeViewItems(name: string): void {
+        this.catalogService.changeViewParam(name);
+        this.catalogView.changeView(name);
     }
 
     public onSearchFilterChange(data: string): void {
