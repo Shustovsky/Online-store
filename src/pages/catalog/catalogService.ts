@@ -162,16 +162,16 @@ export class CatalogService {
             products = products.filter((item) => filter.brandes.includes(item.brand.toLowerCase()));
         }
         if (filter.minPrice > 0) {
-            products = products.filter((item) => (item.price >= filter.minPrice));
+            products = products.filter((item) => item.price >= filter.minPrice);
         }
         if (filter.maxPrice > 0) {
-            products = products.filter((item) => (item.price <= filter.maxPrice));
+            products = products.filter((item) => item.price <= filter.maxPrice);
         }
         if (filter.minStock > 0) {
-            products = products.filter((item) => (item.stock >= filter.minStock));
+            products = products.filter((item) => item.stock >= filter.minStock);
         }
         if (filter.maxStock > 0) {
-            products = products.filter((item) => (item.stock <= filter.maxStock));
+            products = products.filter((item) => item.stock <= filter.maxStock);
         }
         if (filter.search) {
             products = products.filter((item) => {
@@ -195,7 +195,6 @@ export class CatalogService {
                         return true;
                     }
                     return `${item.stock}`.includes(filter.search);
-
                 }
             });
         }
