@@ -206,6 +206,7 @@
   }
 
   &__form-item {
+    display: block;
     width: 100%;
     border: 1px solid orange;
     color: orange;
@@ -276,4 +277,14 @@
     color: #000;
     font-weight: 700;
   }
+
+  &__form-detail {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+  }
+}
+
+.error-massage {
+  color: white;
 }
