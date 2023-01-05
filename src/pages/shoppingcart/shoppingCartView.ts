@@ -167,6 +167,17 @@ export class ShoppingCartView {
         formItem.type = 'text';
         formItem.placeholder = 'Phone number';
         formItem.id = 'phoneNumber';
+
+        formItem.addEventListener('input', (ev) => {
+            const target = ev.target as HTMLInputElement;
+            let value = target.value;
+            value = value.replace(/[^0-9+]/, '');
+            target.value = value;
+            if (value.length > 10) {
+                target.value = value.slice(0, -1);
+            }
+        });
+
         formItem.addEventListener('blur', (ev) => {
             const target = ev.target as HTMLInputElement;
             this.shoppingCartController?.validatePhone(target.value);
@@ -254,13 +265,35 @@ export class ShoppingCartView {
         const cartImg = document.createElement('img');
         cartImg.className = 'shoppingcart__cart-img';
         cartImg.alt = 'logo of payment system';
-        cartImg.src =
-            'https://i.guim.co.uk/img/media/b73cc57cb1d46ae742efd06b6c58805e8600d482/16_0_2443_1466/master/2443.jpg?width=700&quality=85&auto=format&fit=max&s=fb1dca6cdd4589cd9ef2fc941935de71';
-
+        cartImg.src = './assets/icons/no-logo.webp';
         const cartNumber = document.createElement('input');
         cartNumber.className = 'shoppingcart__cart-number';
         cartNumber.type = 'text';
         cartNumber.placeholder = 'Cart number';
+
+        cartNumber.addEventListener('input', (ev) => {
+            const target = ev.target as HTMLInputElement;
+            let value = target.value;
+            if (value[0] === '3') {
+                cartImg.src = './assets/icons/ae-logo.jpg';
+            } else if (value[0] === '4') {
+                cartImg.src = './assets/icons/visa-logo.png';
+            } else if (value[0] === '5') {
+                cartImg.src = './assets/icons/mc-logo.svg';
+            } else {
+                cartImg.src = './assets/icons/no-logo.webp';
+            }
+        });
+
+        cartNumber.addEventListener('input', (ev) => {
+            const target = ev.target as HTMLInputElement;
+            let value = target.value;
+            value = value.replace(/[^0-9]/, '');
+            target.value = value;
+            if (value.length > 16) {
+                target.value = value.slice(0, -1);
+            }
+        });
 
         cartNumber.addEventListener('blur', (ev) => {
             const target = ev.target as HTMLInputElement;
