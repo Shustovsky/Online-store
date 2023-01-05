@@ -13,7 +13,7 @@ import { ShoppingCartView } from './shoppingcart/shoppingCartView';
 import { ProductView } from './product/productView';
 import { ShoppingcartValidator } from './shoppingcart/shoppingcartValidationServise';
 
-enum Categories {
+export enum Categories {
     CATALOG_PATH = 'catalog',
     PRODUCT_PATH = 'product',
     SHOPPING_CART_PATH = 'shoppingcart',
@@ -35,12 +35,30 @@ export class App {
         const productService = new ProductService();
         const shoppingcartService = new ShoppingcartService(productService);
         const catalogService = new CatalogService(productService);
+        const shoppingCartView = new ShoppingCartView(null);
+
+        const productView = new ProductView(null);
+        this.productController = new ProductController(
+            productService,
+            productView,
+            shoppingCartView,
+            shoppingcartService,
+            this.header
+        );
+        productView.productController = this.productController;
 
         const catalogView = new CatalogView(null);
-        this.catalogController = new CatalogController(catalogService, shoppingcartService, catalogView, this.header);
+        this.catalogController = new CatalogController(
+            catalogService,
+            shoppingcartService,
+            catalogView,
+            this.header,
+            productService,
+            productView
+        );
         catalogView.catalogController = this.catalogController;
 
-        const shoppingCartView = new ShoppingCartView(null);
+
         const shoppingcartValidator = new ShoppingcartValidator();
         this.shoppingCartController = new ShoppingCartController(
             shoppingcartService,
@@ -49,15 +67,6 @@ export class App {
             this.header
         );
         shoppingCartView.shoppingCartController = this.shoppingCartController;
-
-        const productView = new ProductView(null);
-        this.productController = new ProductController(
-            productService,
-            productView,
-            shoppingCartView,
-            shoppingcartService
-        );
-        productView.productController = this.productController;
 
         this.pageNotFound = new PageNotFound();
         this.headerController = new HeaderController(this.header, shoppingcartService);

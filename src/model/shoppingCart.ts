@@ -4,6 +4,11 @@ export class ShoppingCart {
     totalPrice = 0;
     productsCount = 0;
     products: Item[] = [];
+
+    public hasProduct(productId: number) : boolean {
+        const item = this.products.find((item) => item.product.id === productId);
+        return item ? true : false;
+    }
 }
 
 export class Item {

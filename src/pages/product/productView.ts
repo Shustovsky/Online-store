@@ -1,5 +1,6 @@
 import { Product } from '../../model/product';
 import { ProductController } from './productController';
+import {ShoppingCart} from "../../model/shoppingCart";
 
 export class ProductView {
     productController: ProductController | null;
@@ -8,7 +9,7 @@ export class ProductView {
         this.productController = productController;
     }
 
-    public renderProduct(product: Product): void {
+    public renderProduct(product: Product, shoppingCart: ShoppingCart): void {
         const header = document.querySelector('.header') as HTMLElement;
 
         const mainElement = document.createElement('main');
@@ -26,7 +27,7 @@ export class ProductView {
 
         const productWrapperAbout = document.createElement('div');
         productWrapperAbout.className = 'product__wrapper-about';
-        this.createProductWrapperAbout(product, productWrapperAbout);
+        this.createProductWrapperAbout(product, shoppingCart, productWrapperAbout);
         container.append(productWrapperAbout);
     }
 
@@ -73,20 +74,20 @@ export class ProductView {
         linkNavigation.append(linkNavigationTitle);
     }
 
-    private createProductWrapperAbout(product: Product, productWrapperAbout: HTMLDivElement): void {
+    private createProductWrapperAbout(product: Product, shoppingCart: ShoppingCart, productWrapperAbout: HTMLDivElement): void {
         const productTitle = document.createElement('div');
         productTitle.className = 'product__title';
         productTitle.textContent = product.title;
 
         const productDescription = document.createElement('div');
         productDescription.className = 'product__description';
-        this.createProductDescription(product, productDescription);
+        this.createProductDescription(product, shoppingCart, productDescription);
 
         productWrapperAbout.append(productTitle);
         productWrapperAbout.append(productDescription);
     }
 
-    private createProductDescription(product: Product, productDescription: HTMLDivElement): void {
+    private createProductDescription(product: Product, shoppingCart: ShoppingCart, productDescription: HTMLDivElement): void {
         const productWrapperPhotos = document.createElement('div');
         productWrapperPhotos.className = 'product__wrapper-photos';
 
@@ -117,7 +118,7 @@ export class ProductView {
 
         const productWrapperPrice = document.createElement('div');
         productWrapperPrice.className = 'product__wrapper-price';
-        this.createProductWrapperPriceElements(product, productWrapperPrice);
+        this.createProductWrapperPriceElements(product, shoppingCart, productWrapperPrice);
 
         const productPhotos = document.createElement('div');
         productPhotos.className = 'product__photos';
@@ -172,15 +173,26 @@ export class ProductView {
         productDetails.append(productDetailsItem);
     }
 
-    public createProductWrapperPriceElements(product: Product, productWrapperPrice: HTMLDivElement): void {
+    private createProductWrapperPriceElements(product: Product, shoppingCart: ShoppingCart, productWrapperPrice: HTMLDivElement): void {
         const productPrice = document.createElement('div');
         productPrice.className = 'product__price';
         productPrice.textContent = `€${product.price}`;
 
         const productBtn = document.createElement('button');
         productBtn.className = 'product__btn';
-        productBtn.id = 'btn-drop';
-        productBtn.textContent = 'drop from cart'; //todo change text click add to cart
+        if (shoppingCart.hasProduct(product.id)) {
+            productBtn.id = 'btn-drop';
+            productBtn.textContent = 'drop from cart';
+            productBtn.addEventListener("click", (ev) => {
+                this.productController?.removeProductFromShoppingCart(product.id);
+            })
+        } else {
+            productBtn.id = 'btn-add';
+            productBtn.textContent = 'add to cart';
+            productBtn.addEventListener("click", (ev) => {
+                this.productController?.addProductToShoppingCart(product.id);
+            })
+        }
 
         const productBtnBuy = document.createElement('button');
         productBtnBuy.className = 'product__btn';
@@ -191,5 +203,29 @@ export class ProductView {
         productWrapperPrice.append(productPrice);
         productWrapperPrice.append(productBtn);
         productWrapperPrice.append(productBtnBuy);
+    }
+
+    public onShoppingCartChange(shoppingCart: ShoppingCart, productId: number) : void {
+        const wrapper = document.querySelector('.product__wrapper-price') as HTMLDivElement;
+        wrapper.querySelector('.product__btn')?.remove();
+
+        const productBtn = document.createElement('button');
+        productBtn.className = 'product__btn';
+        if (shoppingCart.hasProduct(productId)) {
+            productBtn.id = 'btn-drop';
+            productBtn.textContent = 'drop from cart';
+            productBtn.addEventListener("click", (ev) => {
+                this.productController?.removeProductFromShoppingCart(productId);
+            })
+        } else {
+            productBtn.id = 'btn-add';
+            productBtn.textContent = 'add to cart';
+            productBtn.addEventListener("click", (ev) => {
+                this.productController?.addProductToShoppingCart(productId);
+            })
+        }
+
+        const productPrice = document.querySelector('.product__price') as HTMLDivElement;
+        productPrice.after(productBtn);
     }
 }
