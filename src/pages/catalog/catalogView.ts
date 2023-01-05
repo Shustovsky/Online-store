@@ -1,6 +1,7 @@
 import { Product } from '../../model/product';
 import { CatalogController } from './catalogController';
 import { Filter } from '../../model/Filter';
+import { Item } from '../../model/shoppingCart';
 
 export class CatalogView {
     catalogController: CatalogController | null;
@@ -490,7 +491,7 @@ export class CatalogView {
         const addButton = document.createElement('button');
         addButton.className = 'item__buttons_btn add_btn';
         addButton.innerHTML = 'ADD TO CART';
-        addButton.addEventListener('click', () => this.catalogController?.addItemToShoppingCart(product.id));
+        addButton.addEventListener('click', () => this.catalogController?.addOrRemoveItemToShoppingCart(product.id));
         itemButtons.append(addButton);
 
         const detailsButton = document.createElement('button');
@@ -543,5 +544,26 @@ export class CatalogView {
     public deleteCatalog(): void {
         const main = document.querySelector('main') as HTMLElement;
         main.remove();
+    }
+
+    public changeViewSelectedItem(shoppingCart: Item[]): void {
+        const allItems = document.querySelectorAll('.item');
+        allItems.forEach((item) => {
+            item.className = 'item';
+            const btn = item.querySelector('.add_btn');
+            if (btn) {
+                btn.innerHTML = 'ADD TO CART';
+            }
+        });
+        for (const i of shoppingCart) {
+            const item = document.querySelector(`[data-id='${i.product.id}']`);
+            if (item) {
+                item.classList.add('selected');
+                const btnDrop = item.querySelector('.add_btn');
+                if (btnDrop) {
+                    btnDrop.innerHTML = 'DROP FROM CART';
+                }
+            }
+        }
     }
 }
