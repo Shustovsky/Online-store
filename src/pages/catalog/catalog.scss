@@ -229,7 +229,6 @@ main {
                     background-color: #ffffff;
                     z-index: 0;
 
-
                     &:hover .item__dscr {
 
                         transform: translateX(0);
@@ -280,6 +279,7 @@ main {
                             border: none;
                             cursor: pointer;
                             transition: 0.5s all;
+                            font-size: 15px;
 
                             &:hover {
                                 background: lightcoral;
@@ -289,6 +289,16 @@ main {
                                 background: lightgreen;
                             }
                         }
+                    }
+                }
+
+                .selected {
+                    border: 5px solid rgba(144, 238, 144, 0.6);
+                    box-shadow: 0 0 20px lightgreen;
+
+                    img {
+                        width: 208px;
+                        height: 191px;
                     }
                 }
             }
@@ -358,6 +368,16 @@ main {
                                 background: lightgreen;
                             }
                         }
+                    }
+                }
+
+                .selected {
+                    border: 5px solid rgba(144, 238, 144, 0.6);
+                    box-shadow: 0 0 20px lightgreen;
+
+                    img {
+                        width: 208px;
+                        height: 191px;
                     }
                 }
             }
