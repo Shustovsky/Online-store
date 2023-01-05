@@ -594,22 +594,22 @@ export class ShoppingCartView {
         const productAddWrapper = document.createElement('div');
         productAddWrapper.className = 'shoppingcart__wrapper-add-product';
 
-        const addProduct = document.createElement('button');
-        addProduct.className = 'add-product';
-        addProduct.textContent = '+';
-        addProduct.addEventListener('click', () => this.shoppingCartController?.addItemToShoppingCart(id));
-        productAddWrapper.append(addProduct);
+        const deleteProduct = document.createElement('button');
+        deleteProduct.className = 'delete-product';
+        deleteProduct.textContent = '-';
+        deleteProduct.addEventListener('click', () => this.shoppingCartController?.deleteItemFromShoppingCart(id));
+        productAddWrapper.append(deleteProduct);
 
         const displayQuantity = document.createElement('div');
         displayQuantity.className = 'display-quantity';
         displayQuantity.textContent = productCount.toString();
         productAddWrapper.append(displayQuantity);
 
-        const deleteProduct = document.createElement('button');
-        deleteProduct.className = 'delete-product';
-        deleteProduct.textContent = '-';
-        deleteProduct.addEventListener('click', () => this.shoppingCartController?.deleteItemFromShoppingCart(id));
-        productAddWrapper.append(deleteProduct);
+        const addProduct = document.createElement('button');
+        addProduct.className = 'add-product';
+        addProduct.textContent = '+';
+        addProduct.addEventListener('click', () => this.shoppingCartController?.addItemToShoppingCart(id));
+        productAddWrapper.append(addProduct);
 
         return productAddWrapper;
     }
