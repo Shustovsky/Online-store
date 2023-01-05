@@ -273,7 +273,7 @@ export class ShoppingCartView {
 
         cartNumber.addEventListener('input', (ev) => {
             const target = ev.target as HTMLInputElement;
-            let value = target.value;
+            const value = target.value;
             if (value[0] === '3') {
                 cartImg.src = './assets/icons/ae-logo.jpg';
             } else if (value[0] === '4') {

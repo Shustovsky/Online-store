@@ -1,7 +1,7 @@
 import { Product } from '../../model/product';
 import { CatalogController } from './catalogController';
 import { Filter } from '../../model/Filter';
-import {ShoppingCart} from "../../model/shoppingCart";
+import { ShoppingCart } from '../../model/shoppingCart';
 
 export class CatalogView {
     catalogController: CatalogController | null;

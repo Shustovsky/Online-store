@@ -2,7 +2,7 @@ import { ProductView } from './productView';
 import { ProductService } from './productService';
 import { ShoppingCartView } from '../shoppingcart/shoppingCartView';
 import { ShoppingcartService } from '../shoppingcart/shoppingcartService';
-import { HeaderView } from "../components/headerView";
+import { HeaderView } from '../components/headerView';
 
 export class ProductController {
     productService: ProductService;
