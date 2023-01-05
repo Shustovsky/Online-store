@@ -11,7 +11,7 @@ export class ShoppingcartService {
     public getShoppingCart(): ShoppingCart {
         const shoppingCartJson = localStorage.getItem('shoppingCart');
         if (shoppingCartJson) {
-            return JSON.parse(shoppingCartJson);
+            return Object.setPrototypeOf(JSON.parse(shoppingCartJson), new ShoppingCart());
         } else {
             const shoppingCart = new ShoppingCart();
             this.saveShoppingCart(shoppingCart);
@@ -19,14 +19,14 @@ export class ShoppingcartService {
         }
     }
 
-    public addItem(id: number): ShoppingCart {
-        const product = this.productService.getProduct(id);
+    public addItem(productId: number): ShoppingCart {
+        const product = this.productService.getProduct(productId);
         if (!product) {
-            throw new Error(`Product ${id} not found.`);
+            throw new Error(`Product ${productId} not found.`);
         }
 
         const shoppingCart = this.getShoppingCart();
-        const item = this.getShoppingCartItem(shoppingCart, id);
+        const item = this.getShoppingCartItem(shoppingCart, productId);
 
         if (item) {
             if (item.count < product.stock) {
@@ -47,14 +47,14 @@ export class ShoppingcartService {
         return shoppingCart;
     }
 
-    public deleteItem(id: number): ShoppingCart {
-        const product = this.productService.getProduct(id);
+    public deleteItem(productId: number): ShoppingCart {
+        const product = this.productService.getProduct(productId);
         if (!product) {
-            throw new Error(`Product ${id} not found.`);
+            throw new Error(`Product ${productId} not found.`);
         }
 
         const shoppingCart = this.getShoppingCart();
-        const item = this.getShoppingCartItem(shoppingCart, id);
+        const item = this.getShoppingCartItem(shoppingCart, productId);
 
         if (item && item.count > 0) {
             item.count -= 1;

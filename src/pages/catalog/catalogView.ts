@@ -1,6 +1,7 @@
 import { Product } from '../../model/product';
 import { CatalogController } from './catalogController';
 import { Filter } from '../../model/Filter';
+import {ShoppingCart} from "../../model/shoppingCart";
 
 export class CatalogView {
     catalogController: CatalogController | null;
@@ -9,7 +10,7 @@ export class CatalogView {
         this.catalogController = catalogController;
     }
 
-    public createCatalog(products: Product[], filter: Filter, userFilter: Filter): void {
+    public createCatalog(products: Product[], filter: Filter, userFilter: Filter, shoppingCart: ShoppingCart): void {
         const header = document.querySelector('.header') as HTMLElement;
 
         const main = document.createElement('main');
@@ -37,7 +38,7 @@ export class CatalogView {
         productsItems.className = 'products__items products__items-grid';
         productsWrapper.append(productsItems);
 
-        products.forEach((item) => productsItems.append(this.createItems(item)));
+        products.forEach((item) => productsItems.append(this.createItems(item, shoppingCart)));
     }
 
     private createFilters(filter: Filter, userFilter: Filter): HTMLDivElement {
@@ -406,7 +407,7 @@ export class CatalogView {
         return option;
     }
 
-    private createItems(product: Product): HTMLDivElement {
+    private createItems(product: Product, shoppingCart: ShoppingCart): HTMLDivElement {
         const item = document.createElement('div');
         item.className = 'item';
         item.setAttribute('data-id', `${product.id}`);
@@ -489,21 +490,50 @@ export class CatalogView {
 
         const addButton = document.createElement('button');
         addButton.className = 'item__buttons_btn add_btn';
-        addButton.innerHTML = 'ADD TO CART';
-        addButton.addEventListener('click', () => this.catalogController?.addItemToShoppingCart(product.id));
+        addButton.setAttribute('btn-product-id', `${product.id}`);
+        if (shoppingCart.hasProduct(product.id)) {
+            addButton.innerHTML = 'DROP FROM CART';
+            addButton.addEventListener('click', () => this.catalogController?.removeItemFromShoppingCart(product.id));
+        } else {
+            addButton.innerHTML = 'ADD TO CART';
+            addButton.addEventListener('click', () => this.catalogController?.addItemToShoppingCart(product.id));
+        }
         itemButtons.append(addButton);
 
         const detailsButton = document.createElement('button');
+        detailsButton.setAttribute('details-product-id', `${product.id}`);
         detailsButton.className = 'item__buttons_btn details_btn';
         detailsButton.innerHTML = 'DETAILS';
         itemButtons.append(detailsButton);
 
         detailsButton.addEventListener('click', () => {
             const itemID = item.getAttribute('data-id');
-            window.location.href = `?id=${itemID}#product`;
+            if (itemID) {
+                this.catalogController?.viewProductDetails(+itemID);
+            }
         });
 
         return item;
+    }
+
+    public onShoppingCartChange(shoppingCart: ShoppingCart, productId: number): void {
+        const btnDataAttribute = `btn-product-id='${productId}'`;
+        document.querySelector(`[${btnDataAttribute}]`)?.remove();
+
+        const addButton = document.createElement('button');
+        addButton.className = 'item__buttons_btn';
+        addButton.setAttribute('btn-product-id', `${productId}`);
+        if (shoppingCart.hasProduct(productId)) {
+            addButton.innerHTML = 'DROP FROM CART';
+            addButton.addEventListener('click', () => this.catalogController?.removeItemFromShoppingCart(productId));
+        } else {
+            addButton.innerHTML = 'ADD TO CART';
+            addButton.addEventListener('click', () => this.catalogController?.addItemToShoppingCart(productId));
+        }
+
+        const detailsDataAttribute = `details-product-id='${productId}'`;
+        const detailsBtn = document.querySelector(`[${detailsDataAttribute}]`) as HTMLButtonElement;
+        detailsBtn.before(addButton);
     }
 
     public changeView(name: string | null): void {
@@ -524,10 +554,10 @@ export class CatalogView {
         }
     }
 
-    public onFilterChange(products: Product[]): void {
+    public onFilterChange(products: Product[], shoppingCart: ShoppingCart): void {
         const productsItems = document.querySelector('.products__items') as HTMLDivElement;
         productsItems.innerHTML = '';
-        products.forEach((item) => productsItems.append(this.createItems(item)));
+        products.forEach((item) => productsItems.append(this.createItems(item, shoppingCart)));
         this.changeSortStatValue(products);
     }
 
