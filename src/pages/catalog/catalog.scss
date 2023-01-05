@@ -16,18 +16,18 @@ main {
         border: 1px solid black;
         border-radius: 10px;
         padding: 3%;
-        background-color: #ffffff;
         max-height: 550px;
 
         &__buttons {
             display: flex;
             justify-content: space-around;
+            gap: 10px;
 
             &_btn {
                 width: 140px;
                 height: 30px;
                 border-radius: 25px;
-                border: none;
+                border: 1px solid;
                 background-color: aliceblue;
                 cursor: pointer;
                 transition: 0.5s all;
