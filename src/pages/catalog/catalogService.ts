@@ -1,12 +1,16 @@
 import { Product } from '../../model/product';
 import { ProductService } from '../product/productService';
 import { Filter } from '../../model/Filter';
+import { ShoppingCart } from '../../model/shoppingCart';
+import { ShoppingcartService } from '../shoppingcart/shoppingcartService';
 
 export class CatalogService {
     productService: ProductService;
+    shoppingcartService: ShoppingcartService;
 
-    constructor(productService: ProductService) {
+    constructor(productService: ProductService, shoppingcartService: ShoppingcartService) {
         this.productService = productService;
+        this.shoppingcartService = shoppingcartService;
     }
 
     public getCatalog(): Product[] {
@@ -246,5 +250,15 @@ export class CatalogService {
     public doCopyURL(): Promise<void> {
         const url = document.location.href;
         return navigator.clipboard.writeText(url);
+    }
+
+    public chooseAddOrRemoveItemToShoppingCart(shoppingCart: ShoppingCart, productId: number): ShoppingCart {
+        const products = shoppingCart.products;
+        for (const item of products) {
+            if (item.product.id === productId) {
+                return this.shoppingcartService.deleteItem(productId);
+            }
+        }
+        return this.shoppingcartService.addItem(productId);
     }
 }
