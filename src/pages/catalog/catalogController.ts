@@ -2,6 +2,7 @@ import { CatalogService } from './catalogService';
 import { CatalogView } from './catalogView';
 import { ShoppingcartService } from '../shoppingcart/shoppingcartService';
 import { HeaderView } from '../components/headerView';
+import { Item } from '../../model/shoppingCart';
 
 export class CatalogController {
     catalogService: CatalogService;
@@ -29,11 +30,20 @@ export class CatalogController {
         this.catalogView.changeSortStatValue(catalog);
         const view = this.catalogService.getChangeView();
         this.catalogView.changeView(view);
+        this.doViewSelectedItem();
     }
 
-    public addItemToShoppingCart(productId: number): void {
-        const shoppingCart = this.shoppingcartService.addItem(productId);
-        this.headerView.onShoppingCardChange(shoppingCart);
+    public addOrRemoveItemToShoppingCart(productId: number): void {
+        const shoppingCart = this.shoppingcartService.getShoppingCart();
+        const changeShoppingCart = this.catalogService.chooseAddOrRemoveItemToShoppingCart(shoppingCart, productId);
+        this.doViewSelectedItem();
+        this.headerView.onShoppingCardChange(changeShoppingCart);
+    }
+
+    private doViewSelectedItem(): Item[] {
+        const shoppingCart = this.shoppingcartService.getShoppingCart().products;
+        this.catalogView.changeViewSelectedItem(shoppingCart);
+        return shoppingCart;
     }
 
     public onCategoryFilterChange(name: string): void {
@@ -41,6 +51,7 @@ export class CatalogController {
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
+        this.doViewSelectedItem();
     }
 
     public onBrandFilterChange(name: string): void {
@@ -48,6 +59,7 @@ export class CatalogController {
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
+        this.doViewSelectedItem();
     }
 
     public onPriceLowerFilterChange(name: string): void {
@@ -55,6 +67,7 @@ export class CatalogController {
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
+        this.doViewSelectedItem();
     }
 
     public onPriceUpperFilterChange(name: string): void {
@@ -62,6 +75,7 @@ export class CatalogController {
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
+        this.doViewSelectedItem();
     }
 
     public onStockLowerFilterChange(name: string): void {
@@ -69,6 +83,7 @@ export class CatalogController {
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
+        this.doViewSelectedItem();
     }
 
     public onStockUpperFilterChange(name: string): void {
@@ -76,11 +91,13 @@ export class CatalogController {
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
+        this.doViewSelectedItem();
     }
 
     public changeViewItems(name: string): void {
         this.catalogService.changeViewParam(name);
         this.catalogView.changeView(name);
+        this.doViewSelectedItem();
     }
 
     public onSearchFilterChange(data: string): void {
@@ -88,6 +105,7 @@ export class CatalogController {
         const userFilter = this.catalogService.getFilterFromQueryParams();
         const filteredProducts = this.catalogService.getFilteredProduct(userFilter);
         this.catalogView.onFilterChange(filteredProducts);
+        this.doViewSelectedItem();
     }
 
     public urlReset(): void {
