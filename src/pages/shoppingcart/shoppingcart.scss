@@ -1,6 +1,7 @@
 .shoppingcart {
   .shoppingcart-container {
     margin: 0 auto;
+    padding-top: 1%;
     max-width: 1260px;
     position: relative;
     display: flex;
@@ -22,6 +23,7 @@
 
   &__pagination-count {
     display: flex;
+    align-items: center;
     gap: 10px;
   }
 
@@ -105,11 +107,15 @@
     display: flex;
     gap: 10px;
     align-items: center;
+    button{
+      width: 20px;
+    }
   }
 
   &__wrapper-summary {
     width: 30%;
     display: flex;
+    height: 200px;
     //justify-content: space-around;
     align-items: center;
     flex-direction: column;
