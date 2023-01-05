@@ -2,7 +2,7 @@ import { ProductView } from './productView';
 import { ProductService } from './productService';
 import { ShoppingCartView } from '../shoppingcart/shoppingCartView';
 import { ShoppingcartService } from '../shoppingcart/shoppingcartService';
-import {HeaderView} from "../components/headerView";
+import { HeaderView } from "../components/headerView";
 
 export class ProductController {
     productService: ProductService;
@@ -25,26 +25,30 @@ export class ProductController {
         this.headerView = headerView;
     }
 
-    drawPage(id: number) {
+    public drawPage(id: number) {
         const shoppingCart = this.shoppingcartService.getShoppingCart();
         this.productService.fetchProduct(id, (product) => this.productView.renderProduct(product, shoppingCart));
     }
 
-    goToBuyNow() {
+    public goToBuyNow() {
         this.productView.removeProduct();
         this.shoppingCartView.renderShoppingCart(this.shoppingcartService.getShoppingCart());
         this.shoppingCartView.createModalWrapper();
     }
 
-    removeProductFromShoppingCart(productId: number) {
+    public removeProductFromShoppingCart(productId: number) {
         const shoppingCart = this.shoppingcartService.deleteItem(productId);
         this.productView.onShoppingCartChange(shoppingCart, productId);
         this.headerView.onShoppingCardChange(shoppingCart);
     }
 
-    addProductToShoppingCart(productId: number) {
+    public addProductToShoppingCart(productId: number) {
         const shoppingCart = this.shoppingcartService.addItem(productId);
         this.productView.onShoppingCartChange(shoppingCart, productId);
         this.headerView.onShoppingCardChange(shoppingCart);
+    }
+
+    public changeBigPhotoProduct(img: HTMLImageElement): void {
+        this.productView.doChangeBigPhoto(img);
     }
 }
