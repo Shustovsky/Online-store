@@ -112,4 +112,28 @@ export class ShoppingCartController {
             return false;
         }
     }
+
+    checkPromoCode(promoCodeValue: string) {
+        const promoCode = this.shoppingcartService.getPromoCode(promoCodeValue);
+        if (promoCode) {
+            this.shoppingCartView.removeAddPromoCodeBlock();
+            this.shoppingCartView.createAddPromoCodeBlock(promoCode);
+        } else {
+            this.shoppingCartView.removeAddPromoCodeBlock();
+        }
+    }
+
+    applyPromoCode(promoCodeValue: string) {
+        this.shoppingcartService.applyPromoCode(promoCodeValue);
+        const shoppingCart = this.shoppingcartService.getShoppingCart();
+        this.shoppingCartView.onPromoCodeChange(shoppingCart);
+        this.headerView.onShoppingCardChange(shoppingCart);
+    }
+
+    removePromoCode(promoCodeValue: string) {
+        this.shoppingcartService.removePromoCode(promoCodeValue);
+        const shoppingCart = this.shoppingcartService.getShoppingCart();
+        this.shoppingCartView.onPromoCodeChange(shoppingCart);
+        this.headerView.onShoppingCardChange(shoppingCart);
+    }
 }

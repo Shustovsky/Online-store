@@ -508,9 +508,7 @@ export class CatalogView {
 
         detailsButton.addEventListener('click', () => {
             const itemID = item.getAttribute('data-id');
-            if (itemID) {
-                this.catalogController?.viewProductDetails(+itemID);
-            }
+            window.location.href = `?id=${itemID}#product`;
         });
 
         return item;

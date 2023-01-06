@@ -1,5 +1,5 @@
 import { Product } from '../../model/product';
-import { ShoppingCart } from '../../model/shoppingCart';
+import { PromoCode, ShoppingCart } from '../../model/shoppingCart';
 import { ShoppingCartController } from './shoppingCartController';
 
 export class ShoppingCartView {
@@ -638,11 +638,24 @@ export class ShoppingCartView {
 
         const totalWrapper = this.createProductsTotalPrice(shoppingCart);
         displayCart.append(totalWrapper);
+        if (shoppingCart.totalPrice !== shoppingCart.totalPriceWithDiscount) {
+            const withoutDiscount = this.createProductsTotalPriceWithoutDiscount(shoppingCart);
+            displayCart.append(withoutDiscount);
+        }
+
+        if (shoppingCart.promoCodes.length > 0) {
+            const appliedCodesWrapper = this.createAppliedCodesWrapper(shoppingCart);
+            displayCart.append(appliedCodesWrapper);
+        }
 
         const enterCode = document.createElement('input');
         enterCode.className = 'enter-code';
         enterCode.type = 'text';
         enterCode.placeholder = 'Enter promo code';
+        enterCode.addEventListener('input', (ev) => {
+            const target = ev.target as HTMLInputElement;
+            this.shoppingCartController?.checkPromoCode(target.value.toUpperCase());
+        });
         displayCart.append(enterCode);
 
         const examplePromo = document.createElement('div');
@@ -689,6 +702,23 @@ export class ShoppingCartView {
 
         const totalCost = document.createElement('div');
         totalCost.className = 'shoppingcart__total-cost';
+        totalCost.textContent = `€${shoppingCart.totalPriceWithDiscount}`;
+        totalWrapper.append(totalCost);
+
+        return totalWrapper;
+    }
+
+    private createProductsTotalPriceWithoutDiscount(shoppingCart: ShoppingCart): HTMLDivElement {
+        const totalWrapper = document.createElement('div');
+        totalWrapper.className = 'shoppingcart__display-total-cost';
+
+        const titleTotal = document.createElement('div');
+        titleTotal.className = 'shoppingcart__title-total';
+        titleTotal.textContent = 'Total:';
+        totalWrapper.append(titleTotal);
+
+        const totalCost = document.createElement('div');
+        totalCost.className = 'shoppingcart__total-cost cross-total-cost';
         totalCost.textContent = `€${shoppingCart.totalPrice}`;
         totalWrapper.append(totalCost);
 
@@ -759,7 +789,7 @@ export class ShoppingCartView {
         if (!document.querySelector('.cart-number-error')) {
             const modalCartDetails = document.querySelector('.shoppingcart__modal-cart-details') as HTMLElement;
             const cartNumber = document.createElement('div');
-            cartNumber.className = 'error-massage cart-number-error'; // todo title class?
+            cartNumber.className = 'error-massage cart-number-error';
             cartNumber.textContent = 'Cart number - error';
             modalCartDetails.append(cartNumber);
         }
@@ -774,7 +804,7 @@ export class ShoppingCartView {
         if (!document.querySelector('.thru-error')) {
             const modalCartDetails = document.querySelector('.shoppingcart__modal-cart-details') as HTMLElement;
             const thruError = document.createElement('div');
-            thruError.className = 'error-massage thru-error'; // todo title class?
+            thruError.className = 'error-massage thru-error';
             thruError.textContent = 'Card valid thru - error';
             modalCartDetails.append(thruError);
         }
@@ -789,7 +819,7 @@ export class ShoppingCartView {
         if (!document.querySelector('.cvv-error')) {
             const modalCartDetails = document.querySelector('.shoppingcart__modal-cart-details') as HTMLElement;
             const cvvError = document.createElement('div');
-            cvvError.className = 'error-massage cvv-error'; // todo title class?
+            cvvError.className = 'error-massage cvv-error';
             cvvError.textContent = 'Card CVV - error';
             modalCartDetails.append(cvvError);
         }
@@ -798,5 +828,90 @@ export class ShoppingCartView {
     public deleteCvvError(): void {
         const cvvError = document.querySelector('.cvv-error') as HTMLElement;
         cvvError?.remove();
+    }
+
+    public removeAddPromoCodeBlock() {
+        document.querySelector('.shoppingcart__res-promo-wrapper')?.remove();
+    }
+
+    public createAddPromoCodeBlock(promoCode: PromoCode): void {
+        const enterCode = document.querySelector('.enter-code') as HTMLInputElement;
+
+        const resPromoWrapper = document.createElement('div');
+        resPromoWrapper.className = 'shoppingcart__res-promo-wrapper';
+
+        const resPromo = document.createElement('div');
+        resPromo.className = 'shoppingcart__res-promo';
+        resPromo.textContent = `${promoCode.description} - ${promoCode.discountPercent * 100}%`;
+
+        const btnResPromo = document.createElement('button');
+        btnResPromo.className = 'shoppingcart__btn-res-promo';
+        btnResPromo.textContent = 'add';
+        btnResPromo.addEventListener('click', () => this.shoppingCartController?.applyPromoCode(promoCode.value));
+
+        resPromoWrapper.append(resPromo);
+        resPromoWrapper.append(btnResPromo);
+
+        enterCode.after(resPromoWrapper);
+    }
+
+    public onPromoCodeChange(shoppingCart: ShoppingCart): void {
+        this.createNewProductsTotalPrice(shoppingCart);
+        this.removeAddPromoCodeBlock();
+
+        document.querySelector('.shoppingcart__applied-codes-wrapper')?.remove();
+        if (shoppingCart.promoCodes.length > 0) {
+            const inputPromoCode = document.querySelector('.enter-code') as HTMLInputElement;
+            const appliedCodesWrapper = this.createAppliedCodesWrapper(shoppingCart);
+            inputPromoCode.before(appliedCodesWrapper);
+        }
+    }
+
+    private createAppliedCodesWrapper(shoppingCart: ShoppingCart): HTMLDivElement {
+        const appliedCodesWrapper = document.createElement('div');
+        appliedCodesWrapper.className = 'shoppingcart__applied-codes-wrapper';
+
+        const appliedCodesTitle = document.createElement('div');
+        appliedCodesTitle.className = 'shoppingcart__applied-codes-title';
+        appliedCodesTitle.textContent = 'Applied codes';
+        appliedCodesWrapper.append(appliedCodesTitle);
+
+        shoppingCart.promoCodes.forEach((promoCode) => {
+            const appliedCodeItem = this.createAppliedCodeItem(promoCode);
+            appliedCodesWrapper.append(appliedCodeItem);
+        });
+
+        return appliedCodesWrapper;
+    }
+
+    private createNewProductsTotalPrice(shoppingCart: ShoppingCart): void {
+        document.querySelectorAll('.shoppingcart__display-total-cost').forEach((value) => value.remove());
+
+        const productCountWrapper = document.querySelector('.shoppingcart__wrapper-products') as HTMLDivElement;
+        const totalWrapper = this.createProductsTotalPrice(shoppingCart);
+        productCountWrapper.after(totalWrapper);
+        if (shoppingCart.totalPrice !== shoppingCart.totalPriceWithDiscount) {
+            const withoutDiscount = this.createProductsTotalPriceWithoutDiscount(shoppingCart);
+            totalWrapper.before(withoutDiscount);
+        }
+    }
+
+    public createAppliedCodeItem(promoCode: PromoCode): HTMLDivElement {
+        const appliedCodeItem = document.createElement('div');
+        appliedCodeItem.className = 'shoppingcart__applied-code-item';
+
+        const appliedCodeTitle = document.createElement('div');
+        appliedCodeTitle.className = 'shoppingcart__applied-code-title';
+        appliedCodeTitle.textContent = `${promoCode.description} - ${promoCode.discountPercent * 100}%`;
+
+        const appliedCodeBtn = document.createElement('button');
+        appliedCodeBtn.className = 'shoppingcart__applied-code-btn';
+        appliedCodeBtn.textContent = 'drop';
+        appliedCodeBtn.addEventListener('click', () => this.shoppingCartController?.removePromoCode(promoCode.value));
+
+        appliedCodeItem.append(appliedCodeTitle);
+        appliedCodeItem.append(appliedCodeBtn);
+
+        return appliedCodeItem;
     }
 }
