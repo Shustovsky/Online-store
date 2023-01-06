@@ -1,7 +1,12 @@
-import { Item, ShoppingCart } from '../../model/shoppingCart';
+import { Item, PromoCode, ShoppingCart } from '../../model/shoppingCart';
 import { ProductService } from '../product/productService';
 
 export class ShoppingcartService {
+    private readonly EXIST_PROMO_CODES = [
+        new PromoCode('RS', 0.1, 'Rolling Scopes School'),
+        new PromoCode('EPM', 0.2, 'Epam'),
+    ];
+
     private productService: ProductService;
 
     constructor(productService: ProductService) {
@@ -33,6 +38,7 @@ export class ShoppingcartService {
                 item.count += 1;
                 shoppingCart.totalPrice += product.price;
                 shoppingCart.productsCount += 1;
+                this.recalculateShoppingCartPriceWithDiscount(shoppingCart);
                 this.saveShoppingCart(shoppingCart);
             }
         } else {
@@ -41,6 +47,7 @@ export class ShoppingcartService {
                 this.addShoppingCartItem(shoppingCart, newItem);
                 shoppingCart.totalPrice += product.price;
                 shoppingCart.productsCount += 1;
+                this.recalculateShoppingCartPriceWithDiscount(shoppingCart);
                 this.saveShoppingCart(shoppingCart);
             }
         }
@@ -64,6 +71,7 @@ export class ShoppingcartService {
                 const itemIndex = shoppingCart.products.indexOf(item);
                 shoppingCart.products.splice(itemIndex, 1);
             }
+            this.recalculateShoppingCartPriceWithDiscount(shoppingCart);
             this.saveShoppingCart(shoppingCart);
         }
         return shoppingCart;
@@ -86,5 +94,48 @@ export class ShoppingcartService {
 
     private addShoppingCartItem(shoppingCart: ShoppingCart, item: Item) {
         shoppingCart.products.push(item);
+    }
+
+    public applyPromoCode(promoCodeValue: string) {
+        const foundPromoCode = this.EXIST_PROMO_CODES.find((promoCode) => promoCode.value === promoCodeValue);
+        if (!foundPromoCode) {
+            return;
+        }
+
+        const shoppingCart = this.getShoppingCart();
+        if (shoppingCart.hasPromoCode(promoCodeValue)) {
+            return;
+        }
+
+        shoppingCart.promoCodes.push(foundPromoCode);
+        this.recalculateShoppingCartPriceWithDiscount(shoppingCart);
+        this.saveShoppingCart(shoppingCart);
+    }
+
+    public removePromoCode(promoCodeValue: string) {
+        const shoppingCart = this.getShoppingCart();
+        if (!shoppingCart.hasPromoCode(promoCodeValue)) {
+            return;
+        }
+
+        const promoCodeIndex = shoppingCart.promoCodes.findIndex((promoCode) => promoCode.value === promoCodeValue);
+        if (promoCodeIndex > -1) {
+            shoppingCart.promoCodes.splice(promoCodeIndex, 1);
+        }
+        this.recalculateShoppingCartPriceWithDiscount(shoppingCart);
+        this.saveShoppingCart(shoppingCart);
+    }
+
+    getPromoCode(promoCodeValue: string): PromoCode | undefined {
+        return this.EXIST_PROMO_CODES.find((promoCode) => promoCode.value === promoCodeValue);
+    }
+
+    private recalculateShoppingCartPriceWithDiscount(shoppingCart: ShoppingCart) {
+        const totalDiscountPercent = shoppingCart.promoCodes.reduce(
+            (previousValue, currentValue) => previousValue + currentValue.discountPercent,
+            0
+        );
+        const discountSum = Math.round(shoppingCart.totalPrice * totalDiscountPercent);
+        shoppingCart.totalPriceWithDiscount = shoppingCart.totalPrice - discountSum;
     }
 }

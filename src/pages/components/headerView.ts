@@ -28,7 +28,7 @@ export class HeaderView {
     public onShoppingCardChange(shoppingCart: ShoppingCart) {
         const priceNumb = document.querySelector('.price_numb');
         if (priceNumb) {
-            priceNumb.innerHTML = `€ ${shoppingCart.totalPrice}`;
+            priceNumb.innerHTML = `€ ${shoppingCart.totalPriceWithDiscount}`;
         }
 
         const cartCount = document.querySelector('.cart_count');
@@ -70,7 +70,7 @@ export class HeaderView {
 
         const priceNumb = document.createElement('div');
         priceNumb.className = 'price_numb';
-        priceNumb.innerHTML = `€ ${shoppingCart.totalPrice}`;
+        priceNumb.innerHTML = `€ ${shoppingCart.totalPriceWithDiscount}`;
         price.append(priceNumb);
 
         return price;
