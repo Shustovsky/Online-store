@@ -5,9 +5,9 @@ export class ShoppingCart {
     productsCount = 0;
     products: Item[] = [];
 
-    public hasProduct(productId: number) : boolean {
+    public hasProduct(productId: number): boolean {
         const item = this.products.find((item) => item.product.id === productId);
-        return item ? true : false;
+        return !!item;
     }
 }
 

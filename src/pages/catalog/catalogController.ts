@@ -2,9 +2,9 @@ import { CatalogService } from './catalogService';
 import { CatalogView } from './catalogView';
 import { ShoppingcartService } from '../shoppingcart/shoppingcartService';
 import { HeaderView } from '../components/headerView';
-import {ProductService} from "../product/productService";
-import {ProductView} from "../product/productView";
-import {Categories} from "../App";
+import { ProductService } from '../product/productService';
+import { ProductView } from '../product/productView';
+import { Categories } from '../App';
 
 export class CatalogController {
     catalogService: CatalogService;
@@ -55,7 +55,7 @@ export class CatalogController {
 
     public viewProductDetails(productId: number) {
         const shoppingCart = this.shoppingcartService.getShoppingCart();
-        this.changeUrl(Categories.PRODUCT_PATH, productId.toString())
+        this.changeUrl(Categories.PRODUCT_PATH, productId.toString());
         this.catalogView.deleteCatalog();
         this.productService.fetchProduct(productId, (product) => this.productView.renderProduct(product, shoppingCart));
     }
@@ -67,9 +67,11 @@ export class CatalogController {
             window.location.host +
             window.location.pathname +
             '?' +
-            'id=' + productId +
-            '#' + hash;
-        window.history.pushState({path: newUrl}, '', newUrl);
+            'id=' +
+            productId +
+            '#' +
+            hash;
+        window.history.pushState({ path: newUrl }, '', newUrl);
     }
 
     public onCategoryFilterChange(name: string): void {

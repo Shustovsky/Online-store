@@ -58,7 +58,6 @@ export class App {
         );
         catalogView.catalogController = this.catalogController;
 
-
         const shoppingcartValidator = new ShoppingcartValidator();
         this.shoppingCartController = new ShoppingCartController(
             shoppingcartService,

@@ -1,6 +1,6 @@
 import { Product } from '../../model/product';
 import { ProductController } from './productController';
-import {ShoppingCart} from "../../model/shoppingCart";
+import { ShoppingCart } from '../../model/shoppingCart';
 
 export class ProductView {
     productController: ProductController | null;
@@ -74,7 +74,11 @@ export class ProductView {
         linkNavigation.append(linkNavigationTitle);
     }
 
-    private createProductWrapperAbout(product: Product, shoppingCart: ShoppingCart, productWrapperAbout: HTMLDivElement): void {
+    private createProductWrapperAbout(
+        product: Product,
+        shoppingCart: ShoppingCart,
+        productWrapperAbout: HTMLDivElement
+    ): void {
         const productTitle = document.createElement('div');
         productTitle.className = 'product__title';
         productTitle.textContent = product.title;
@@ -87,7 +91,11 @@ export class ProductView {
         productWrapperAbout.append(productDescription);
     }
 
-    private createProductDescription(product: Product, shoppingCart: ShoppingCart, productDescription: HTMLDivElement): void {
+    private createProductDescription(
+        product: Product,
+        shoppingCart: ShoppingCart,
+        productDescription: HTMLDivElement
+    ): void {
         const productWrapperPhotos = document.createElement('div');
         productWrapperPhotos.className = 'product__wrapper-photos';
 
@@ -132,6 +140,7 @@ export class ProductView {
             photoMini.src = imageUrl;
             photoMini.alt = `${product.title} photo`;
             productPhotoMini.append(photoMini);
+            photoMini.addEventListener('click', () => this.productController?.changeBigPhotoProduct(photoMini));
         });
 
         const productPhotoBig = document.createElement('div');
@@ -173,7 +182,11 @@ export class ProductView {
         productDetails.append(productDetailsItem);
     }
 
-    private createProductWrapperPriceElements(product: Product, shoppingCart: ShoppingCart, productWrapperPrice: HTMLDivElement): void {
+    private createProductWrapperPriceElements(
+        product: Product,
+        shoppingCart: ShoppingCart,
+        productWrapperPrice: HTMLDivElement
+    ): void {
         const productPrice = document.createElement('div');
         productPrice.className = 'product__price';
         productPrice.textContent = `€${product.price}`;
@@ -183,15 +196,15 @@ export class ProductView {
         if (shoppingCart.hasProduct(product.id)) {
             productBtn.id = 'btn-drop';
             productBtn.textContent = 'drop from cart';
-            productBtn.addEventListener("click", (ev) => {
+            productBtn.addEventListener('click', () => {
                 this.productController?.removeProductFromShoppingCart(product.id);
-            })
+            });
         } else {
             productBtn.id = 'btn-add';
             productBtn.textContent = 'add to cart';
-            productBtn.addEventListener("click", (ev) => {
+            productBtn.addEventListener('click', () => {
                 this.productController?.addProductToShoppingCart(product.id);
-            })
+            });
         }
 
         const productBtnBuy = document.createElement('button');
@@ -205,7 +218,7 @@ export class ProductView {
         productWrapperPrice.append(productBtnBuy);
     }
 
-    public onShoppingCartChange(shoppingCart: ShoppingCart, productId: number) : void {
+    public onShoppingCartChange(shoppingCart: ShoppingCart, productId: number): void {
         const wrapper = document.querySelector('.product__wrapper-price') as HTMLDivElement;
         wrapper.querySelector('.product__btn')?.remove();
 
@@ -214,18 +227,26 @@ export class ProductView {
         if (shoppingCart.hasProduct(productId)) {
             productBtn.id = 'btn-drop';
             productBtn.textContent = 'drop from cart';
-            productBtn.addEventListener("click", (ev) => {
+            productBtn.addEventListener('click', () => {
                 this.productController?.removeProductFromShoppingCart(productId);
-            })
+            });
         } else {
             productBtn.id = 'btn-add';
             productBtn.textContent = 'add to cart';
-            productBtn.addEventListener("click", (ev) => {
+            productBtn.addEventListener('click', () => {
                 this.productController?.addProductToShoppingCart(productId);
-            })
+            });
         }
 
         const productPrice = document.querySelector('.product__price') as HTMLDivElement;
         productPrice.after(productBtn);
+    }
+
+    public doChangeBigPhoto(img: HTMLImageElement) {
+        const bigPhoto = document.querySelector('.photo-big') as HTMLImageElement;
+        if (bigPhoto) {
+            bigPhoto.src = img.src;
+            bigPhoto.alt = img.alt;
+        }
     }
 }
