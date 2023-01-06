@@ -1,13 +1,16 @@
 export class PageNotFound {
     createPageNotFound(): void {
+        const main = document.querySelector('main');
+        if (main) {
+            main.remove();
+        }
         const header = document.querySelector('.header') as HTMLElement;
-
-        const main = document.createElement('main');
-        header.after(main);
+        const newMain = document.createElement('main');
+        header.after(newMain);
 
         const container = document.createElement('div');
         container.className = 'container';
-        main.append(container);
+        newMain.append(container);
 
         const h1 = document.createElement('h1');
         h1.innerHTML = 'PAGE NOT FOUND (404)';
