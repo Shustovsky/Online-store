@@ -100,7 +100,6 @@ export class App {
     checkHashAndRender(): void {
         const location = window.location;
         const hash = location.hash.slice(1);
-        console.log(location);
         this.renderNewPage(hash, location);
     }
 

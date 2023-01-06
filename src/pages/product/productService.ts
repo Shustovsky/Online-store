@@ -1,7 +1,14 @@
 import { Product } from '../../model/product';
 import products from '../../assets/json/products.json';
+import { PageNotFound } from '../components/pageNotFound';
 
 export class ProductService {
+    pageNotFound: PageNotFound;
+
+    constructor() {
+        this.pageNotFound = new PageNotFound();
+    }
+
     public fetchProduct(id: number, callback: (product: Product) => void): void {
         const product = this.getProduct(id);
         if (product) {
@@ -10,6 +17,11 @@ export class ProductService {
             fetch('https://dummyjson.com/products/' + id)
                 .then((res) => {
                     if (!res.ok) {
+                        const main = document.querySelector('main') as HTMLElement;
+                        if (main) {
+                            main.remove();
+                        }
+                        this.pageNotFound.createPageNotFound();
                         throw new Error(res.statusText);
                     }
                     return res.json();
