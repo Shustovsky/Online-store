@@ -72,21 +72,24 @@ export class App {
         this.headerController = new HeaderController(this.header, shoppingcartService);
     }
 
-    renderNewPage(url: string): void {
+    renderNewPage(hash: string, location: Location): void {
         const main = document.querySelector('main') as HTMLElement;
         if (main) {
             main.remove();
         }
-
-        if (url.includes(Categories.CATALOG_PATH) || url === '') {
-            this.catalogController.drawPage();
-        } else if (url.includes(Categories.PRODUCT_PATH)) {
-            const id = +this.getQueryParam('id');
-            this.productController.drawPage(id);
-        } else if (url === Categories.SHOPPING_CART_PATH) {
-            this.shoppingCartController.drawPage();
-        } else {
+        if (location.pathname !== '/') {
             this.pageNotFound.createPageNotFound();
+        } else {
+            if (hash.includes(Categories.CATALOG_PATH) || hash === '') {
+                this.catalogController.drawPage();
+            } else if (hash.includes(Categories.PRODUCT_PATH)) {
+                const id = +this.getQueryParam('id');
+                this.productController.drawPage(id);
+            } else if (hash === Categories.SHOPPING_CART_PATH) {
+                this.shoppingCartController.drawPage();
+            } else {
+                this.pageNotFound.createPageNotFound();
+            }
         }
     }
 
@@ -95,8 +98,10 @@ export class App {
     }
 
     checkHashAndRender(): void {
-        const hash = window.location.hash.slice(1);
-        this.renderNewPage(hash);
+        const location = window.location;
+        const hash = location.hash.slice(1);
+        console.log(location);
+        this.renderNewPage(hash, location);
     }
 
     run(): void {

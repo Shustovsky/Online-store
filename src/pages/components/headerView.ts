@@ -49,7 +49,7 @@ export class HeaderView {
 
         const logoName = document.createElement('a');
         logoName.className = 'logo_name';
-        logoName.href = '#';
+        logoName.href = window.location.origin;
         logo.append(logoName);
 
         const logoHeading = document.createElement('h1');
@@ -80,7 +80,7 @@ export class HeaderView {
         const cart = document.createElement('div');
         cart.className = 'cart';
         cart.onclick = function () {
-            window.location.href = '#shoppingcart';
+            window.location.href = `${window.location.origin}/#shoppingcart`;
         };
 
         const cartImg = document.createElement('img');
