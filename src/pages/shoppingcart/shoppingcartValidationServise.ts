@@ -38,7 +38,7 @@ export class ShoppingcartValidator {
         if (!this.PHONE_REGEX.test(phoneNumber)) {
             return false;
         }
-        return phoneNumber.length === 9;
+        return phoneNumber.length >= 9;
     }
 
     public validateAddress(address: string): boolean {

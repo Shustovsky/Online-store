@@ -173,9 +173,6 @@ export class ShoppingCartView {
             let value = target.value;
             value = value.replace(/[^0-9+]/, '');
             target.value = value;
-            if (value.length > 10) {
-                target.value = value.slice(0, -1);
-            }
         });
 
         formItem.addEventListener('blur', (ev) => {
