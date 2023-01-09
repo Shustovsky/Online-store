@@ -173,9 +173,6 @@ export class ShoppingCartView {
             let value = target.value;
             value = value.replace(/[^0-9+]/, '');
             target.value = value;
-            if (value.length > 10) {
-                target.value = value.slice(0, -1);
-            }
         });
 
         formItem.addEventListener('blur', (ev) => {
@@ -913,5 +910,20 @@ export class ShoppingCartView {
         appliedCodeItem.append(appliedCodeBtn);
 
         return appliedCodeItem;
+    }
+
+    public renderEmptyShoppingCart() {
+        document.querySelector('.shoppingcart')?.remove();
+
+        const header = document.querySelector('.header') as HTMLElement;
+
+        const mainElement = document.createElement('main');
+        mainElement.className = 'shoppingcart';
+        header.after(mainElement);
+
+        const container = document.createElement('div');
+        container.className = 'shoppingcart-container';
+        container.textContent = 'Empty shopping cart';
+        mainElement.append(container);
     }
 }

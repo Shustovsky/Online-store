@@ -23,7 +23,11 @@ export class ShoppingCartController {
 
     drawPage(): void {
         const shoppingCart = this.shoppingcartService.getShoppingCart();
-        this.shoppingCartView.renderShoppingCart(shoppingCart);
+        if (shoppingCart.products.length > 0) {
+            this.shoppingCartView.renderShoppingCart(shoppingCart);
+        } else {
+            this.shoppingCartView.renderEmptyShoppingCart();
+        }
     }
 
     addItemToShoppingCart(productId: number): void {
@@ -34,7 +38,12 @@ export class ShoppingCartController {
 
     deleteItemFromShoppingCart(productId: number): void {
         const shoppingCart = this.shoppingcartService.deleteItem(productId);
-        this.shoppingCartView.onShoppingCardChange(shoppingCart);
+        if (shoppingCart.products.length > 0) {
+            this.shoppingCartView.onShoppingCardChange(shoppingCart);
+        } else {
+            this.shoppingCartView.renderEmptyShoppingCart();
+        }
+
         this.headerView.onShoppingCardChange(shoppingCart);
     }
 
