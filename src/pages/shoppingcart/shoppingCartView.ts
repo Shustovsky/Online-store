@@ -911,4 +911,19 @@ export class ShoppingCartView {
 
         return appliedCodeItem;
     }
+
+    public renderEmptyShoppingCart() {
+        document.querySelector('.shoppingcart')?.remove();
+
+        const header = document.querySelector('.header') as HTMLElement;
+
+        const mainElement = document.createElement('main');
+        mainElement.className = 'shoppingcart';
+        header.after(mainElement);
+
+        const container = document.createElement('div');
+        container.className = 'shoppingcart-container';
+        container.textContent = 'Empty shopping cart';
+        mainElement.append(container);
+    }
 }
