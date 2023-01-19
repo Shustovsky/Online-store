@@ -1,0 +1,122 @@
+.product {
+  &__link-navigation {
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 30px;
+    text-transform: uppercase;
+  }
+
+  &__wrapper-about {
+    margin-top: 3%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__title {
+    font-size: 25px;
+    text-transform: uppercase;
+  }
+
+  &__description {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    width: 100%;
+  }
+
+  &__wrapper-photos {
+    width: 50%;
+  }
+
+  &__photos {
+    min-height: 255px;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__photo-mini {
+    margin-top: 5%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .photo-mini {
+    object-fit: cover;
+    width: 70px;
+    height: 70px;
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+
+  &__photo-big {
+    max-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .photo-big {
+    object-fit: cover;
+    max-height: 200px;
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+
+  &__details {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &__details-item {
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    text-align: center;
+  }
+
+  &__wrapper-price {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__price {
+    font-size: 30px;
+  }
+
+  &__btn {
+    width: 140px;
+    height: 30px;
+    border-radius: 25px;
+    border: 1px solid;
+    background-color: aliceblue;
+    cursor: pointer;
+    transition: 0.5s all;
+
+    &-active {
+      background: lightgreen;
+    }
+
+    &:hover {
+      background: lightcoral;
+    }
+
+    &:active {
+      background: lightgreen;
+    }
+  }
+}

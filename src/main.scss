@@ -1,0 +1,26 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  /* outline: 1px solid red; */
+  /* подчеркивает каждый элемент карсным */
+}
+
+html {
+  scroll-behavior: smooth;
+  /* для плавной прокрутки */
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1260px;
+  position: relative;
+}
+
+@import './pages/catalog/catalog.scss';
+@import './pages/product/product.scss';
+@import './pages/components/header.scss';
+@import './pages/components/footer.scss';
+@import './pages/shoppingcart/shoppingcart.scss';
